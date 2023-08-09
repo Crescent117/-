@@ -14,6 +14,8 @@ const data = [
   { page: 9 }
 ];
 
+
+
 interface SearchListDB {
   imgurl: string;
   storename: string;
