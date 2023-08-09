@@ -1,0 +1,54 @@
+.menubar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  background-color: white;
+  padding: 0 20px;
+}
+
+.home-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  margin-right: 20px;
+  width: 100px;
+  height: 100%;
+}
+
+.menubar .home-link img {
+  height: 60px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  max-width: 1500px;
+}
+
+.search-box input {
+  margin-right: 5px; /* Adjust the spacing between the input and the icon as needed */
+  width: 1600px;
+  height: 60px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+}
+
+.links a {
+  text-decoration: none;
+  color: #777;
+  margin-right: 10px;
+  padding: 5px 10px; /* 영역 확보를 위한 패딩값 */
+  box-shadow: 0 0 0 1px #777; /* 네모 경계선 스타일 추가 */
+  border-radius: 5px; /* 네모 경계선의 둥근 정도 */
+}
+
+.mypage-button {
+  background-color: white;
+  color: #777;
+  border: none;
+}

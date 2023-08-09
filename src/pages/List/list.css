@@ -1,0 +1,107 @@
+/* List.css */
+
+/* header 스타일 설정 */
+/* .basic-info-list {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(235, 235, 235);
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* body { */
+/* margin: 0;
+} */
+
+.container {
+  /* max-width: 2000px; */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.basic-info-list {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(247, 245, 245);
+  /* padding: 20px; */
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* Make the element fill the entire width */
+  height: 230px;
+}
+
+/* Optionally, if you want to center the text vertically as well */
+.basic-info-list p {
+  margin: 0; /* Remove any default margin */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Make the text container fill the height */
+}
+
+.container-place {
+  margin-top: 30px;
+  width: auto;
+}
+
+/* place-list 스타일 설정 */
+.place-list {
+  margin-left: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* place-item 스타일 설정 */
+.place-item {
+  /* margin-left: 0px; */
+  height: 250px;
+  flex: 1; /* 각 place-item이 같은 너비를 갖도록 flex: 1 속성 추가 */
+  display: flex;
+  align-items: center;
+  border: none;
+  padding: 10px;
+}
+
+.place-item img {
+  width: 250px;
+  height: 250px;
+  margin-right: 10px;
+  /* margin-left: 100px; */
+}
+
+.place-info {
+  display: flex;
+  flex-direction: column;
+}
+.place-info-header {
+  width: 350px;
+}
+
+.buttons {
+  float: right;
+}
+.viewdetail {
+  padding: 5px 10px;
+  background-color: white;
+  color: #6c757d; /* Gray color for icon and text */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.viewdetail-p {
+  color: #6c757d; /* Gray color for icon and text */
+}
+
+/* 기타 스타일 설정 */
+
+.custom-main-padding {
+  padding: 20px;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #ccc;
+}
