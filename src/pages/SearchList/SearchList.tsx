@@ -15,7 +15,6 @@ const data = [
 ];
 
 
-
 interface SearchListDB {
   imgurl: string;
   storename: string;
