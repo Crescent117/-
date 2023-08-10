@@ -126,4 +126,4 @@ const RestaurantStories = () => {
                 react_1.default.createElement(shared_componentCSS_1.SlideButton, { onClick: clickSlideRight, style: { marginLeft: 10 } }, ">")))));
 };
 exports.default = RestaurantStories;
-//# sourceMappingURL=RestaurantStories.js.map
+//# sourceMappingURL=restaurantStories.js.map

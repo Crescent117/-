@@ -11,18 +11,21 @@ exports.Module_title_wrap = styled_components_1.default.div `
   justify-content: space-between;
   align-items: center
   width: 100%;
+  margin: 15px 0 0 0;
 `;
 //타이틀 이름
 exports.Module_title_name = styled_components_1.default.h2 `
-  font-size: 20px;
+  font-size: 25px;
   color: orange;
   margin-left: 100px;
 `;
 //리스트 더보기
-exports.Module_more = styled_components_1.default.h3 `
+exports.Module_more = styled_components_1.default.p `
   color: grey;
   cursor: pointer;
   margin-right: 100px;
+  font-size:20px;
+  line-height:30px
 `;
 exports.ImageWrapper = styled_components_1.default.div `
    width: 100%;
@@ -95,8 +98,9 @@ exports.SlideButton = styled_components_1.default.button `
     color: blue;
   }
 `;
-exports.ImageTitleText = styled_components_1.default.h1 `
+exports.ImageTitleText = styled_components_1.default.p `
   position: absolute;
+  font-size:25px;
   top: ${({ top }) => `${top}%`};
   left: 0;
   right: 0;

@@ -91,4 +91,4 @@ const PopularRestaurants = ({ itemsPerPage, columns, }) => {
             react_1.default.createElement(shared_componentCSS_1.SlideButton, { onClick: clickSlideRight, style: { marginLeft: 10 } }, ">"))))));
 };
 exports.default = PopularRestaurants;
-//# sourceMappingURL=PopularRestaurants.js.map
+//# sourceMappingURL=popularRestaurants.js.map

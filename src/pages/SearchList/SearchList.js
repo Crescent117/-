@@ -35,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const react_router_dom_1 = require("react-router-dom");
 const styled_components_1 = __importStar(require("styled-components"));
+const styled_components_2 = require("styled-components");
 const data = [
     { page: 1 },
     { page: 2 },
@@ -68,6 +69,8 @@ const SearchList = () => {
         else {
             pageNum = parseInt(pageNumParams) - 1;
         }
+        console.log(pageNum);
+        console.log(searchValue);
         try {
             const response = yield fetch(`http://localhost:4500/getSearchList/${searchValue}?pageNum=${pageNum}`);
             // 에러처리
@@ -118,8 +121,9 @@ const SearchList = () => {
                             react_1.default.createElement(FoodImg_img, { height: 239, src: store.imgurl }),
                             react_1.default.createElement("br", null),
                             react_1.default.createElement(StoreTitleScoreWrap, null,
-                                react_1.default.createElement(StoreTitle, { text: store.storename, maxChar: 18 }, store.storename),
-                                react_1.default.createElement(StoreScore, null, store.pointAVG)),
+                                react_1.default.createElement(styled_components_2.StyleSheetManager, { shouldForwardProp: (prop) => prop !== "maxChar" },
+                                    react_1.default.createElement(StoreTitle, { maxchar: 20 }, store.storename),
+                                    react_1.default.createElement(StoreScore, null, store.pointAVG))),
                             react_1.default.createElement("div", null,
                                 store.storeLocation,
                                 " - ",
@@ -131,7 +135,7 @@ const SearchList = () => {
                     return null;
                 }))))),
             react_1.default.createElement(Pagenation_div, null, data && data.map((item, index) => (react_1.default.createElement(PagingButton_button, { key: index },
-                react_1.default.createElement("a", null, item.page)))))),
+                react_1.default.createElement("a", null, index)))))),
         react_1.default.createElement(RightSide_div, null,
             react_1.default.createElement(Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
             react_1.default.createElement(SearchListTitle_h1, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
@@ -177,12 +181,12 @@ const StoreTitleScoreWrap = styled_components_1.default.div `
 const StoreTitle = styled_components_1.default.span `
   font-size: 24px;
   color: grey;
-  ${({ maxChar }) => maxChar && (0, styled_components_1.css) `
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: ${maxChar}ch;
-  `}
+  ${({ maxchar }) => maxchar && (0, styled_components_1.css) `
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: ${maxchar}ch;
+    `}
 `;
 const StoreScore = styled_components_1.default.span `
   color: orange;
@@ -228,4 +232,4 @@ const Pagenation_div = styled_components_1.default.div `
 `;
 const PagingButton_button = styled_components_1.default.button `
 `;
-//# sourceMappingURL=SearchList.js.map
+//# sourceMappingURL=searchList.js.map

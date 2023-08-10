@@ -61,4 +61,4 @@ const SearchListSchema = new mongoose_1.Schema({
 });
 const SearchList = mongoose_1.default.model("SearchList", SearchListSchema);
 exports.default = SearchList;
-//# sourceMappingURL=SearchList.js.map
+//# sourceMappingURL=searchList.js.map

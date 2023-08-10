@@ -11,8 +11,8 @@ import List from "./pages/List/list";
 import ListDetail from "./pages/List/listdetail";
 import { response } from "express";
 import Menubar from "./pages/List/menubar";
-import Home from "./pages/HOME/Home";
-import SearchList from "./pages/SearchList/SearchList";
+import SearchList from "./pages/SearchList/searchList";
+import Home from "./pages/HOME/home";
 
 function App() {
   return (

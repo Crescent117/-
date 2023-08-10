@@ -1,9 +1,9 @@
 import React, { ImgHTMLAttributes, useEffect, useState } from "react";
 import styled from "styled-components";
-import Banner from "../../components/Home/Banner/Banner";
-import PopularRestaurants from "../../components/Home/PopularRestaurants/PopularRestaurants";
-import RestaurantStories from "../../components/Home/RestaurantStories/RestaurantStories";
-import RegionRestaurants from "../../components/Home/RegionRestaurants/RegionRestaurants";
+import Banner from "../../components/Home/Banner/banner";
+import PopularRestaurants from "../../components/Home/PopularRestaurants/popularRestaurants";
+import RestaurantStories from "../../components/Home/RestaurantStories/restaurantStories";
+import RegionRestaurants from "../../components/Home/RegionRestaurants/regionRestaurants";
 import useWindowResize from "../../components/shared/useWindowResize";
 
 function Home() {

@@ -69,4 +69,4 @@ exports.HomeBannerText = styled_components_1.default.h1 `
   text-align: center;
   color: #ffffff;
 `;
-//# sourceMappingURL=HomeBannerCSS.js.map
+//# sourceMappingURL=homeBannerCSS.js.map

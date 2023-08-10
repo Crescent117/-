@@ -27,10 +27,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
-const Banner_1 = __importDefault(require("../../components/Home/Banner/Banner"));
-const PopularRestaurants_1 = __importDefault(require("../../components/Home/PopularRestaurants/PopularRestaurants"));
-const RestaurantStories_1 = __importDefault(require("../../components/Home/RestaurantStories/RestaurantStories"));
-const RegionRestaurants_1 = __importDefault(require("../../components/Home/RegionRestaurants/RegionRestaurants"));
+const banner_1 = __importDefault(require("../../components/Home/Banner/banner"));
+const popularRestaurants_1 = __importDefault(require("../../components/Home/PopularRestaurants/popularRestaurants"));
+const restaurantStories_1 = __importDefault(require("../../components/Home/RestaurantStories/restaurantStories"));
+const regionRestaurants_1 = __importDefault(require("../../components/Home/RegionRestaurants/regionRestaurants"));
 const useWindowResize_1 = __importDefault(require("../../components/shared/useWindowResize"));
 function Home() {
     //화면크기에 따라 바뀌는 값들
@@ -48,12 +48,12 @@ function Home() {
     };
     (0, useWindowResize_1.default)(handleResize);
     return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement(Banner_1.default, null),
-        react_1.default.createElement(PopularRestaurants_1.default, { itemsPerPage: itemsPerPage, columns: columns }),
+        react_1.default.createElement(banner_1.default, null),
+        react_1.default.createElement(popularRestaurants_1.default, { itemsPerPage: itemsPerPage, columns: columns }),
         react_1.default.createElement("hr", null),
-        react_1.default.createElement(RestaurantStories_1.default, null),
+        react_1.default.createElement(restaurantStories_1.default, null),
         react_1.default.createElement("hr", null),
-        react_1.default.createElement(RegionRestaurants_1.default, { itemsPerPage: itemsPerPage, columns: columns })));
+        react_1.default.createElement(regionRestaurants_1.default, { itemsPerPage: itemsPerPage, columns: columns })));
 }
 exports.default = Home;
-//# sourceMappingURL=Home.js.map
+//# sourceMappingURL=home.js.map

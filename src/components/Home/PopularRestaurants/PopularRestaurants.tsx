@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { WindowSizeChangeProps } from "../shared_interface";
 import {
   Module_title_wrap,
   Module_title_name,
@@ -13,25 +13,20 @@ import {
   ImageContent,
 } from "../shared_componentCSS";
 
-interface PopularRestaurantsProps {
-  itemsPerPage: number;
-  columns: number;
-}
-
-interface TrustBestItem {
+interface TrustBestDB {
+  url: string;
   src: string;
   alt: string;
   titleText: string;
   content: string;
-  url: string;
 }
 
-const PopularRestaurants: React.FC<PopularRestaurantsProps> = ({
+const PopularRestaurants = ({
   itemsPerPage,
   columns,
-}) => {
+}: WindowSizeChangeProps) => {
   const [usePopularSlide, setUsePopularSlide] = useState(0);
-  const [useTrustBestData, setUseTrustBestData] = useState<TrustBestItem[]>([]);
+  const [useTrustBestData, setUseTrustBestData] = useState<TrustBestDB[]>([]);
   const numberOfGroups = useTrustBestData
     ? Math.ceil(useTrustBestData.length / itemsPerPage)
     : 0;
@@ -68,7 +63,7 @@ const PopularRestaurants: React.FC<PopularRestaurantsProps> = ({
     setUsePopularSlide(usePopularSlide - 1);
   };
 
-  const moveTopList = (url:string) => {
+  const moveTopList = (url: string) => {
     window.location.href = url;
   };
   return (
@@ -122,5 +117,7 @@ const PopularRestaurants: React.FC<PopularRestaurantsProps> = ({
     </>
   );
 };
+
+
 
 export default PopularRestaurants;

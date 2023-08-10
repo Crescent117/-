@@ -12,7 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SearchList_1 = __importDefault(require("../../Model/SearchList/SearchList"));
+const searchList_1 = __importDefault(require("../../Model/SearchList/searchList"));
+//쿼리문 불러오기
 // 댓글 평점 평균 계산
 const calculatePointAverage = (comments) => {
     const filteredComments = comments.filter((comment) => comment.point !== null && comment.point !== undefined);
@@ -41,12 +42,14 @@ const processStoreInfo = (param) => {
     };
 };
 exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const keyword = req.params.keyword;
     const pageNum = Number(req.query.pageNum) || 0;
-    ;
+    const pageSize = 20; // 페이지당 아이템 수
+    const skipAmount = pageNum * pageSize; // 건너뛸 아이템 수
     console.log(pageNum);
     try {
-        const results = yield SearchList_1.default.aggregate([
+        const commonPipeline = [
             {
                 $unwind: "$store",
             },
@@ -127,9 +130,18 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
                     },
                 },
             },
+        ];
+        const totalCountPipeline = [
+            ...commonPipeline,
+            {
+                $count: "totalCount",
+            },
+        ];
+        const keywordSearchPipeline = [
+            ...commonPipeline,
             {
                 $sort: {
-                    avgCommentPoint: -1, // Sort by the average point in ascending order
+                    avgCommentPoint: -1,
                 },
             },
             {
@@ -139,24 +151,27 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
                     _id: 0,
                 },
             },
-            { $skip: pageNum * 20 },
-            { $limit: 20 }, // 설정한 숫자만큼 limit
-        ]);
+            { $skip: skipAmount },
+            { $limit: pageSize },
+        ];
+        const totalCountResults = yield searchList_1.default.aggregate(totalCountPipeline);
+        const totalCount = ((_a = totalCountResults[0]) === null || _a === void 0 ? void 0 : _a.totalCount) || 0;
+        const keywordSearchResults = yield searchList_1.default.aggregate(keywordSearchPipeline);
         /*
           query 끝
         */
-        // 값이 없을시 처리
-        if (results.length === 0) {
+        if (keywordSearchResults.length === 0) {
             res
                 .status(200)
                 .json({ message: "검색한 값의 결과는 존재하지 않습니다." });
         }
+        // 값이 없을시 처리
         // 반환 배열
-        const responseSearchList = yield Promise.all(results.map((result) => processStoreInfo(result)));
+        const responseSearchList = yield Promise.all(keywordSearchResults.map((result) => processStoreInfo(result)));
         res.status(200).json(responseSearchList);
     }
     catch (error) {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
-//# sourceMappingURL=SearchListController.js.map
+//# sourceMappingURL=searchListController.js.map

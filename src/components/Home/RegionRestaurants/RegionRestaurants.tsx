@@ -1,4 +1,5 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
+import { WindowSizeChangeProps } from "../shared_interface";
 import {
   Module_title_wrap,
   Module_title_name,
@@ -51,15 +52,10 @@ const regionFoodBest = [
   },
 ];
 
-interface RegionRestaurantsProps {
-  columns: number;
-  itemsPerPage:number
-}
-
 const RegionRestaurants = ({
   columns,
   itemsPerPage,
-}: RegionRestaurantsProps) => {
+}: WindowSizeChangeProps) => {
   //이미지 슬라이스 페이지
   const [useRegionSlide, setUseRegionSlide] = useState(0);
   const numberOfGroupsRegion = Math.ceil(regionFoodBest.length / itemsPerPage);
@@ -109,7 +105,7 @@ const RegionRestaurants = ({
                 >
                   <Image_list src={image.src} alt={image.alt} height={236} />
                   <ImageTitleText top={30}>{image.titleText}</ImageTitleText>
-                  <ImageContent top={50}>{image.content}</ImageContent>
+                  <ImageContent top={60}>{image.content}</ImageContent>
                 </ImageContainer>
               ))}
           </>

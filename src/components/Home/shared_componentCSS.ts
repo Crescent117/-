@@ -7,20 +7,23 @@ export const Module_title_wrap = styled.div`
   justify-content: space-between;
   align-items: center
   width: 100%;
+  margin: 15px 0 0 0;
 `;
 
 //타이틀 이름
 export const Module_title_name = styled.h2`
-  font-size: 20px;
+  font-size: 25px;
   color: orange;
   margin-left: 100px;
 `;
 
 //리스트 더보기
-export const Module_more = styled.h3`
+export const Module_more = styled.p`
   color: grey;
   cursor: pointer;
   margin-right: 100px;
+  font-size:20px;
+  line-height:30px
 `;
 
 type ImageWrapperProps = {
@@ -116,8 +119,9 @@ export const SlideButton = styled.button`
   }
 `;
 
-export const ImageTitleText = styled.h1<homeListTextHeight>`
+export const ImageTitleText = styled.p<homeListTextHeight>`
   position: absolute;
+  font-size:25px;
   top: ${({top}) => `${top}%`};
   left: 0;
   right: 0;

@@ -89,8 +89,8 @@ const RegionRestaurants = ({ columns, itemsPerPage, }) => {
                     .map((image, index) => (react_1.default.createElement(shared_componentCSS_1.ImageContainer, { key: index, onDragStart: (e) => e.preventDefault(), height: 236 },
                     react_1.default.createElement(shared_componentCSS_1.Image_list, { src: image.src, alt: image.alt, height: 236 }),
                     react_1.default.createElement(shared_componentCSS_1.ImageTitleText, { top: 30 }, image.titleText),
-                    react_1.default.createElement(shared_componentCSS_1.ImageContent, { top: 50 }, image.content)))))),
+                    react_1.default.createElement(shared_componentCSS_1.ImageContent, { top: 60 }, image.content)))))),
             columns === 2 && (react_1.default.createElement(shared_componentCSS_1.SlideButton, { onClick: clickRegionSlideRight, style: { marginLeft: 10 } }, ">")))));
 };
 exports.default = RegionRestaurants;
-//# sourceMappingURL=RegionRestaurants.js.map
+//# sourceMappingURL=regionRestaurants.js.map

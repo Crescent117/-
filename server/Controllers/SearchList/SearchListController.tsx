@@ -1,63 +1,26 @@
-import searchList from "../../Model/SearchList/SearchList";
+import searchList from "../../Model/SearchList/searchList";
 import { Request, Response } from "express";
+import {
+  SearchListItem,
+  Tag,
+} from "./searchListControllerInterface";
 
-interface MenuItem {
-  price: string;
-  menu: string;
-}
-
-interface Tag {
-  storename: string;
-  category_name?: string;
-  new_addr_fullname?: string;
-  name3?: string;
-  newaddrfull?: string;
-  menu_name: MenuItem[];
-}
-
-interface Comment {
-  list: {
-    point: number;
-    contents: string;
-    username: string;
-    profile: string;
-    date: string;
-  }[];
-}
-
-interface BasicInfo {
-  placenamefull: string;
-  catename: string;
-  mainphotourl: string;
-  visit: number;
-  favorite: number;
-}
-
-interface SearchListItem {
-  store: {
-    storeInfo: {
-      basicInfo: BasicInfo;
-      comment: Comment;
-      tag: Tag[];
-    };
-  };
-  storeInfo: SearchListItem;
-  basicInfo: BasicInfo;
-  comment: Comment;
-  tag: Tag[];
-}
+//쿼리문 불러오기
 
 
 // 댓글 평점 평균 계산
 const calculatePointAverage = (comments: { point: number }[]) => {
-const filteredComments = comments.filter(
-  (comment) => comment.point !== null && comment.point !== undefined
-);
+  const filteredComments = comments.filter(
+    (comment) => comment.point !== null && comment.point !== undefined
+  );
+  
   const pointSum: number = filteredComments.reduce(
     (sum: number, comment) => sum + comment.point,0
   );
+  
   const average =
     filteredComments.length > 0 ? pointSum / filteredComments.length : 0;
+  
   return average.toFixed(1);
 };
 
@@ -84,12 +47,17 @@ const processStoreInfo = (param: SearchListItem) => {
   };
 };
 
+
+
 exports.getSearchList = async (req: Request, res: Response) => {
-  const keyword: String = req.params.keyword;
-  const pageNum: number = Number(req.query.pageNum) || 0;;
+  const keyword: string = req.params.keyword;
+  const pageNum: number = Number(req.query.pageNum) || 0;
+  const pageSize = 20; // 페이지당 아이템 수
+  const skipAmount = pageNum * pageSize; // 건너뛸 아이템 수
   console.log(pageNum);
+
   try {
-    const results: SearchListItem[] = await searchList.aggregate([
+    const commonPipeline = [
       {
         $unwind: "$store",
       },
@@ -170,9 +138,20 @@ exports.getSearchList = async (req: Request, res: Response) => {
           },
         },
       },
+    ];
+    
+    const totalCountPipeline: any[] = [
+      ...commonPipeline,
+      {
+        $count: "totalCount",
+      },
+    ];
+
+    const keywordSearchPipeline: any[] = [
+      ...commonPipeline,
       {
         $sort: {
-          avgCommentPoint: -1, // Sort by the average point in ascending order
+          avgCommentPoint: -1,
         },
       },
       {
@@ -182,25 +161,36 @@ exports.getSearchList = async (req: Request, res: Response) => {
           _id: 0,
         },
       },
-      { $skip: pageNum * 20 }, // 설정한 숫자만큼 검색 제외
-      { $limit: 20 }, // 설정한 숫자만큼 limit
-    ]);
+      { $skip: skipAmount },
+      { $limit: pageSize },
+    ];
+
+    const totalCountResults = await searchList.aggregate(totalCountPipeline);
+    const totalCount = totalCountResults[0]?.totalCount || 0;
+
+    const keywordSearchResults = await searchList.aggregate(
+      keywordSearchPipeline
+    );
     /*
       query 끝
     */
 
-    // 값이 없을시 처리
-    if (results.length === 0) {
+    if (keywordSearchResults.length === 0) {
       res
         .status(200)
         .json({ message: "검색한 값의 결과는 존재하지 않습니다." });
     }
 
+    // 값이 없을시 처리
+
     // 반환 배열
     const responseSearchList = await Promise.all(
-      results.map((result) => processStoreInfo(result))
+      keywordSearchResults.map((result) =>
+        processStoreInfo(result as SearchListItem)
+      )
     );
-   res.status(200).json(responseSearchList);
+
+    res.status(200).json(responseSearchList);
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }

@@ -34,4 +34,4 @@ const TrustBest = new Schema({
     collection: "DealiciousFood",
 });
 module.exports = mongoose_1.default.model("TrustBest", TrustBest);
-//# sourceMappingURL=TrustBest.js.map
+//# sourceMappingURL=trustBest.js.map

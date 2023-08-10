@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
+import { StyleSheetManager } from "styled-components";
 
 const data = [
   { page: 1 },
@@ -56,7 +57,8 @@ const SearchList = () => {
     } else { 
        pageNum = parseInt(pageNumParams) -1;
     }
-
+    console.log(pageNum);
+    console.log(searchValue);
       try {
         const response = await fetch(
           `http://localhost:4500/getSearchList/${searchValue}?pageNum=${pageNum}`
@@ -123,10 +125,14 @@ const SearchList = () => {
                             <br />
                             {/*가게타이틀 평점 */}
                             <StoreTitleScoreWrap>
-                              <StoreTitle text={store.storename} maxChar={18}>
-                                {store.storename}
-                              </StoreTitle>
-                              <StoreScore>{store.pointAVG}</StoreScore>
+                              <StyleSheetManager
+                                shouldForwardProp={(prop) => prop !== "maxChar"}
+                              >
+                                <StoreTitle maxchar={20}>
+                                  {store.storename}
+                                </StoreTitle>
+                                <StoreScore>{store.pointAVG}</StoreScore>
+                              </StyleSheetManager>
                             </StoreTitleScoreWrap>
                             <div>
                               {store.storeLocation} - {store.storeRecommendFood}
@@ -144,7 +150,7 @@ const SearchList = () => {
             <Pagenation_div>
               {data && data.map((item, index:number) => ( 
                 <PagingButton_button key={index}>
-                  <a>{ item.page }</a>
+                  <a>{ index }</a>
                 </PagingButton_button>
               ))}
             </Pagenation_div>
@@ -173,8 +179,7 @@ type FoodImg_size = {
 }
 
 interface StoreTitleProps {
-  text: string;
-  maxChar?: number;
+  maxchar: number;
 }
 
 const OuterWrap_section = styled.section`
@@ -219,15 +224,16 @@ const StoreTitleScoreWrap = styled.div`
   padding: 10px 0;
 `;
 
-const StoreTitle = styled.span<StoreTitleProps>`
+const StoreTitle = styled.span <StoreTitleProps>`
   font-size: 24px;
   color: grey;
-  ${({ maxChar }) => maxChar && css`
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: ${maxChar}ch;
-  `}
+  ${({ maxchar }) =>
+    maxchar && css`
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: ${maxchar}ch;
+    `}
 `;
 
 const StoreScore = styled.span`

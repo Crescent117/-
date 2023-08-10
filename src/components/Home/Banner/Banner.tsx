@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import {
   HomeBanner,
   HomeBannerSearchWrap,
@@ -7,21 +7,22 @@ import {
   HomeBannerButton,
   HomeBannerSearchIcon,
   HomeBannerText,
-} from "./HomeBannerCSS";
+} from "./homeBannerCSS"; 
 
 const Banner = () => {
   const [searchValue, setSearchValue] = useState("");
 
-  const searchListGo = () => {
-    if (searchValue.length !== 0) {
+  const searchListGo = () => { 
+    
+    if (searchValue.length !== 0) { 
       console.log(searchValue);
-      window.location.href = `/search/${searchValue}`;
+      window.location.href=`/search/${searchValue}`
     }
-
-    if (searchValue.length === 0) {
+    
+    if (searchValue.length === 0) { 
       window.alert("검색어를 입력해주세요!");
     }
-  };
+  }
 
   const enterKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key === "Enter") {
@@ -34,7 +35,9 @@ const Banner = () => {
     }
   };
 
-  const popupSearch = () => {};
+  const popupSearch = () => { 
+    
+  }
   return (
     <HomeBanner>
       <HomeBannerText>
@@ -55,7 +58,11 @@ const Banner = () => {
             onKeyDown={enterKeyDown}
             onClick={popupSearch}
           />
-          <HomeBannerButton type="button" value="검색" onClick={searchListGo} />
+          <HomeBannerButton
+            type="button"
+            value="검색"
+            onClick={searchListGo}
+          />
         </HomeBannerLabel>
       </HomeBannerSearchWrap>
     </HomeBanner>

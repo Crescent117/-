@@ -1,0 +1,90 @@
+[
+  {
+    "$unwind": "$store"
+  },
+  {
+    "$match": {
+      "store.storeInfo": {
+        "$exists": true
+      }
+    }
+  },
+  {
+    "$addFields": {
+      "matchingTags": {
+        "$filter": {
+          "input": "$store.storeInfo.tag",
+          "as": "tag",
+          "cond": {
+            "$or": [
+              {
+                "$regexMatch": {
+                  "input": "$$tag.storename",
+                  "regex": "keyword",
+                  "options": "i"
+                }
+              },
+              {
+                "$regexMatch": {
+                  "input": "$$tag.category_name",
+                  "regex": "keyword",
+                  "options": "i"
+                }
+              },
+              {
+                "$regexMatch": {
+                  "input": "$$tag.new_addr_fullname",
+                  "regex": "keyword",
+                  "options": "i"
+                }
+              },
+              {
+                "$regexMatch": {
+                  "input": "$$tag.name3",
+                  "regex": "keyword",
+                  "options": "i"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "store.storeInfo.menuInfo.menuList": {
+        "$filter": {
+          "input": "$store.storeInfo.menuInfo.menuList",
+          "as": "menu",
+          "cond": {
+            "$regexMatch": {
+              "input": "$$menu.menu",
+              "regex": "keyword",
+              "options": "i"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "$match": {
+      "$or": [
+        {
+          "matchingTags": {
+            "$ne": []
+          }
+        },
+        {
+          "store.storeInfo.menuInfo.menuList": {
+            "$ne": []
+          }
+        }
+      ]
+    }
+  },
+  {
+    "$addFields": {
+      "avgCommentPoint": {
+        "$avg": "$store.storeInfo.comment.list.point"
+      }
+    }
+  }
+]
