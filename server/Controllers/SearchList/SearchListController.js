@@ -44,7 +44,7 @@ const processStoreInfo = (param) => {
 exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const keyword = req.params.keyword;
-    const pageNum = Number(req.query.pageNum) || 0;
+    const pageNum = Number(req.query.pageNum) - 1 || 0;
     const pageSize = 20; // 페이지당 아이템 수
     const skipAmount = pageNum * pageSize; // 건너뛸 아이템 수
     console.log(pageNum);
@@ -131,12 +131,17 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
                 },
             },
         ];
+        /*
+          query 끝
+        */
+        // 글의 총 갯수
         const totalCountPipeline = [
             ...commonPipeline,
             {
                 $count: "totalCount",
             },
         ];
+        // 출력할 글 점수기준 정렬 및 limit
         const keywordSearchPipeline = [
             ...commonPipeline,
             {
@@ -154,24 +159,29 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
             { $skip: skipAmount },
             { $limit: pageSize },
         ];
+        // 글 총 갯수 계산
         const totalCountResults = yield searchList_1.default.aggregate(totalCountPipeline);
         const totalCount = ((_a = totalCountResults[0]) === null || _a === void 0 ? void 0 : _a.totalCount) || 0;
+        const totalPages = Math.ceil(totalCount / 20);
+        const totalPagesObject = { totalPage: totalPages };
+        // 검색값으로 데이터 뽑아오기
         const keywordSearchResults = yield searchList_1.default.aggregate(keywordSearchPipeline);
-        /*
-          query 끝
-        */
+        console.log(keywordSearchResults);
         if (keywordSearchResults.length === 0) {
-            res
+            return res
                 .status(200)
                 .json({ message: "검색한 값의 결과는 존재하지 않습니다." });
         }
         // 값이 없을시 처리
         // 반환 배열
         const responseSearchList = yield Promise.all(keywordSearchResults.map((result) => processStoreInfo(result)));
-        res.status(200).json(responseSearchList);
+        const finalResult = [];
+        finalResult.push(totalPagesObject);
+        finalResult.push(responseSearchList);
+        res.status(200).json(finalResult);
     }
     catch (error) {
-        res.status(500).json({ message: "Internal Server Error" });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 });
 //# sourceMappingURL=searchListController.js.map

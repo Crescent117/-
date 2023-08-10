@@ -51,7 +51,9 @@ const SearchList = () => {
     const [useSearchList, setUseSearchList] = (0, react_1.useState)([]);
     const { searchValue } = (0, react_router_dom_1.useParams)();
     const [useTrustBest, setUseTrustBest] = (0, react_1.useState)([]);
-    // 페이지
+    const [useTotalPage, setUsrTotalPage] = (0, react_1.useState)(0);
+    const [usePageNum, setUsePageNum] = (0, react_1.useState)(0);
+    // 현재 페이지 정보
     const location = (0, react_router_dom_1.useLocation)();
     const searchParams = new URLSearchParams(location.search);
     (0, react_1.useEffect)(() => {
@@ -61,16 +63,17 @@ const SearchList = () => {
     // 검색된 가게 정보 불러오기
     const getSearchList = () => __awaiter(void 0, void 0, void 0, function* () {
         // 현재 페이지 정보
-        let pageNumParams = searchParams.get("pagenum");
+        const pageNumParams = searchParams.get("pagenum");
         let pageNum;
+        console.log(pageNumParams);
+        console.log(searchValue);
         if (pageNumParams == null) {
-            pageNum = 0;
+            pageNum = 1;
         }
         else {
-            pageNum = parseInt(pageNumParams) - 1;
+            pageNum = parseInt(pageNumParams);
         }
-        console.log(pageNum);
-        console.log(searchValue);
+        setUsePageNum(pageNum);
         try {
             const response = yield fetch(`http://localhost:4500/getSearchList/${searchValue}?pageNum=${pageNum}`);
             // 에러처리
@@ -83,7 +86,10 @@ const SearchList = () => {
                 return;
             }
             const data = yield response.json();
-            setUseSearchList(data);
+            // 가게 정보들
+            setUseSearchList(data[1]);
+            // 페이징 함수
+            setUsrTotalPage(data[0].totalPage);
         }
         catch (err) {
             console.log("error log: ", err);
@@ -102,13 +108,29 @@ const SearchList = () => {
                 return;
             }
             const data = yield response.json();
-            console.log(data);
             setUseTrustBest(data);
         }
         catch (err) {
             console.log("error log: ", err);
         }
     });
+    const pagenation = (totalPage, pageNum) => {
+        let maxPage = totalPage;
+        let minPage = maxPage - 9;
+        console.log("totalPage" + totalPage);
+        if (maxPage % 10 !== 0) {
+            minPage = maxPage - (maxPage % 10) + 1;
+        }
+        const pageArray = [];
+        console.log(maxPage);
+        console.log(minPage);
+        for (let i = minPage; i <= maxPage; i += 1) {
+            console.log("페이지 올라간다" + i);
+            pageArray.push(i);
+        }
+        return (react_1.default.createElement(react_1.default.Fragment, null, pageArray.map((page, index) => (react_1.default.createElement(PagingButton_button, { key: index },
+            react_1.default.createElement("a", { href: `/search/${searchValue}?pagenum=${page}` }, page))))));
+    };
     return (react_1.default.createElement(react_1.default.Fragment, null, useSearchList && (react_1.default.createElement(OuterWrap_section, null,
         react_1.default.createElement(SearchListWrap_div, null,
             react_1.default.createElement(SearchListInner_div, null,
@@ -134,8 +156,7 @@ const SearchList = () => {
                     }
                     return null;
                 }))))),
-            react_1.default.createElement(Pagenation_div, null, data && data.map((item, index) => (react_1.default.createElement(PagingButton_button, { key: index },
-                react_1.default.createElement("a", null, index)))))),
+            react_1.default.createElement(Pagenation_div, null, useTotalPage && pagenation(useTotalPage, usePageNum))),
         react_1.default.createElement(RightSide_div, null,
             react_1.default.createElement(Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
             react_1.default.createElement(SearchListTitle_h1, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),

@@ -25,20 +25,20 @@ interface SearchListDB {
   visit: number;
 }
 
-interface TrustBest {
-  src: string;
+interface TrustBest { 
+  src:string
 }
-
-
 
 const SearchList = () => {
   const [useSearchList, setUseSearchList] = useState<SearchListDB[]>([]);
   const { searchValue } = useParams();
   const [useTrustBest, setUseTrustBest] = useState<TrustBest[]>([]);
-
-  // 페이지
+  const [useTotalPage, setUsrTotalPage] = useState<number>(0);
+  const [usePageNum, setUsePageNum] = useState<number>(0);
+  // 현재 페이지 정보
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  
   
 
   useEffect(() => {
@@ -49,37 +49,41 @@ const SearchList = () => {
   // 검색된 가게 정보 불러오기
   const getSearchList = async () => {
     // 현재 페이지 정보
-    let pageNumParams = searchParams.get("pagenum");
+    const pageNumParams = searchParams.get("pagenum");
     let pageNum: number;
-    
+    console.log(pageNumParams);
+    console.log(searchValue)
     if (pageNumParams == null) {
-      pageNum = 0;
+      pageNum = 1;
     } else { 
-       pageNum = parseInt(pageNumParams) -1;
+      pageNum = parseInt(pageNumParams);
     }
-    console.log(pageNum);
-    console.log(searchValue);
-      try {
-        const response = await fetch(
-          `http://localhost:4500/getSearchList/${searchValue}?pageNum=${pageNum}`
-        );
+    setUsePageNum(pageNum);
+    try {
+      const response = await fetch(
+        `http://localhost:4500/getSearchList/${searchValue}?pageNum=${pageNum}`
+      );
 
-        // 에러처리
-        if (!response.ok) {
-          const errorData = await response.json();
-          const statusCode = response.status;
-          const statusText = response.statusText;
-          const message = errorData.message[0];
-          console.log(`${statusCode} - ${statusText} - ${message}`);
-          return;
-        }
-
-        const data = await response.json();
-        setUseSearchList(data);
-      } catch (err) {
-        console.log("error log: ", err);
+      // 에러처리
+      if (!response.ok) {
+        const errorData = await response.json();
+        const statusCode = response.status;
+        const statusText = response.statusText;
+        const message = errorData.message[0];
+        console.log(`${statusCode} - ${statusText} - ${message}`);
+        return;
       }
+      const data = await response.json();
+       // 가게 정보들
+      setUseSearchList(data[1]);
+      
+      // 페이징 함수
+      setUsrTotalPage(data[0].totalPage);
+    } catch (err) {
+      console.log("error log: ", err);
+    }
   };
+
 
   const getTrustBest = async () => {
     try {
@@ -96,11 +100,38 @@ const SearchList = () => {
       }
 
       const data = await response.json();
-      console.log(data);
       setUseTrustBest(data);
     } catch (err) {
       console.log("error log: ", err);
     }
+  };
+
+
+  const pagenation = (totalPage: number, pageNum: number) => {
+    let maxPage = totalPage;
+    let minPage = maxPage - 9;
+    console.log("totalPage" + totalPage);
+    if (maxPage % 10 !== 0) {
+      minPage = maxPage - (maxPage % 10) + 1
+    }
+
+    const pageArray: number[] = [];
+    console.log(maxPage);
+    console.log(minPage)
+    for (let i = minPage; i <= maxPage; i += 1) {
+      console.log("페이지 올라간다"+i)
+      pageArray.push(i);
+    }
+
+    return (
+      <>
+        {pageArray.map((page, index) => (
+          <PagingButton_button key={index}>
+            <a href={`/search/${searchValue}?pagenum=${page}`}>{page}</a>
+          </PagingButton_button>
+        ))}
+      </>
+    );
   };
 
   return (
@@ -148,11 +179,7 @@ const SearchList = () => {
               )}
             </SearchListInner_div>
             <Pagenation_div>
-              {data && data.map((item, index:number) => ( 
-                <PagingButton_button key={index}>
-                  <a>{ index }</a>
-                </PagingButton_button>
-              ))}
+              {useTotalPage && pagenation(useTotalPage, usePageNum)}
             </Pagenation_div>
           </SearchListWrap_div>
           <RightSide_div>

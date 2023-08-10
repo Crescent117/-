@@ -51,7 +51,7 @@ const processStoreInfo = (param: SearchListItem) => {
 
 exports.getSearchList = async (req: Request, res: Response) => {
   const keyword: string = req.params.keyword;
-  const pageNum: number = Number(req.query.pageNum) || 0;
+  const pageNum: number = Number(req.query.pageNum) - 1 || 0;
   const pageSize = 20; // 페이지당 아이템 수
   const skipAmount = pageNum * pageSize; // 건너뛸 아이템 수
   console.log(pageNum);
@@ -139,7 +139,11 @@ exports.getSearchList = async (req: Request, res: Response) => {
         },
       },
     ];
-    
+    /*
+      query 끝
+    */
+
+    // 글의 총 갯수
     const totalCountPipeline: any[] = [
       ...commonPipeline,
       {
@@ -147,6 +151,7 @@ exports.getSearchList = async (req: Request, res: Response) => {
       },
     ];
 
+    // 출력할 글 점수기준 정렬 및 limit
     const keywordSearchPipeline: any[] = [
       ...commonPipeline,
       {
@@ -165,18 +170,22 @@ exports.getSearchList = async (req: Request, res: Response) => {
       { $limit: pageSize },
     ];
 
+
+    // 글 총 갯수 계산
     const totalCountResults = await searchList.aggregate(totalCountPipeline);
     const totalCount = totalCountResults[0]?.totalCount || 0;
+    const totalPages = Math.ceil(totalCount / 20);
+    const totalPagesObject = { totalPage: totalPages };
 
+
+    // 검색값으로 데이터 뽑아오기
     const keywordSearchResults = await searchList.aggregate(
       keywordSearchPipeline
     );
-    /*
-      query 끝
-    */
-
+      console.log(keywordSearchResults);
+    
     if (keywordSearchResults.length === 0) {
-      res
+      return res
         .status(200)
         .json({ message: "검색한 값의 결과는 존재하지 않습니다." });
     }
@@ -190,8 +199,12 @@ exports.getSearchList = async (req: Request, res: Response) => {
       )
     );
 
-    res.status(200).json(responseSearchList);
+    const finalResult = [];
+    finalResult.push(totalPagesObject);
+    finalResult.push(responseSearchList);
+    
+    res.status(200).json(finalResult);
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
