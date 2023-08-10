@@ -36,23 +36,14 @@ const react_1 = __importStar(require("react"));
 const react_router_dom_1 = require("react-router-dom");
 const styled_components_1 = __importStar(require("styled-components"));
 const styled_components_2 = require("styled-components");
-const data = [
-    { page: 1 },
-    { page: 2 },
-    { page: 3 },
-    { page: 4 },
-    { page: 5 },
-    { page: 6 },
-    { page: 7 },
-    { page: 8 },
-    { page: 9 }
-];
 const SearchList = () => {
     const [useSearchList, setUseSearchList] = (0, react_1.useState)([]);
     const { searchValue } = (0, react_router_dom_1.useParams)();
     const [useTrustBest, setUseTrustBest] = (0, react_1.useState)([]);
     const [useTotalPage, setUsrTotalPage] = (0, react_1.useState)(0);
     const [usePageNum, setUsePageNum] = (0, react_1.useState)(0);
+    const [useSearchNotFound, setUseSearchNotFound] = (0, react_1.useState)(false);
+    const [useSearchNotFoundMessage, setUseSearchNotFoundMessage] = (0, react_1.useState)("");
     // 현재 페이지 정보
     const location = (0, react_router_dom_1.useLocation)();
     const searchParams = new URLSearchParams(location.search);
@@ -86,6 +77,12 @@ const SearchList = () => {
                 return;
             }
             const data = yield response.json();
+            if (data.message) {
+                console.log(data);
+                console.log(response);
+                setUseSearchNotFound(true);
+                setUseSearchNotFoundMessage(data.message);
+            }
             // 가게 정보들
             setUseSearchList(data[1]);
             // 페이징 함수
@@ -114,54 +111,66 @@ const SearchList = () => {
             console.log("error log: ", err);
         }
     });
+    // 페이징 로직
     const pagenation = (totalPage, pageNum) => {
-        let maxPage = totalPage;
-        let minPage = maxPage - 9;
-        console.log("totalPage" + totalPage);
-        if (maxPage % 10 !== 0) {
-            minPage = maxPage - (maxPage % 10) + 1;
-        }
+        const keyword = { searchValue }.searchValue; //검색값
+        const pageBlockSize = 10; // 한 번에 표시할 페이지 수
+        // 현재 페이지가 속한 블록 계산
+        const currentPageBlock = Math.ceil(pageNum / pageBlockSize);
+        // 블록의 첫 페이지 계산
+        const minPage = (currentPageBlock - 1) * pageBlockSize + 1;
+        // 블록의 마지막 페이지 계산
+        const maxPage = Math.min(currentPageBlock * pageBlockSize, totalPage);
+        // //페이징이 끝까지 있을때
+        // let maxPage = Math.ceil(pageNum / 20) * 20;
+        // let minPage = maxPage - 9;
+        // //페이징이 끝까지 없을때
+        // if (totalPage % 10 !== 0) {
+        //   maxPage = totalPage;
+        //   minPage = maxPage - (maxPage % 10) + 1;
+        // }
         const pageArray = [];
-        console.log(maxPage);
-        console.log(minPage);
         for (let i = minPage; i <= maxPage; i += 1) {
-            console.log("페이지 올라간다" + i);
             pageArray.push(i);
         }
         return (react_1.default.createElement(react_1.default.Fragment, null, pageArray.map((page, index) => (react_1.default.createElement(PagingButton_button, { key: index },
-            react_1.default.createElement("a", { href: `/search/${searchValue}?pagenum=${page}` }, page))))));
+            react_1.default.createElement("a", { href: `/search/${keyword}?pagenum=${page}` }, page))))));
     };
-    return (react_1.default.createElement(react_1.default.Fragment, null, useSearchList && (react_1.default.createElement(OuterWrap_section, null,
-        react_1.default.createElement(SearchListWrap_div, null,
-            react_1.default.createElement(SearchListInner_div, null,
-                react_1.default.createElement(SearchListTitle_h1, null,
-                    searchValue,
-                    " \uB9DB\uC9D1 \uC778\uAE30 \uAC80\uC0C9\uC21C\uC704"),
-                Array.from({ length: useSearchList.length / 2 }).map((_, ulIndex) => (react_1.default.createElement(SertchList_ul, { key: ulIndex }, useSearchList.map((store, index) => {
-                    if (index >= ulIndex * 2 && index < (ulIndex + 1) * 2) {
-                        return (react_1.default.createElement(SearchList_li, { key: index },
-                            react_1.default.createElement(FoodImg_img, { height: 239, src: store.imgurl }),
-                            react_1.default.createElement("br", null),
-                            react_1.default.createElement(StoreTitleScoreWrap, null,
-                                react_1.default.createElement(styled_components_2.StyleSheetManager, { shouldForwardProp: (prop) => prop !== "maxChar" },
-                                    react_1.default.createElement(StoreTitle, { maxchar: 20 }, store.storename),
-                                    react_1.default.createElement(StoreScore, null, store.pointAVG))),
-                            react_1.default.createElement("div", null,
-                                store.storeLocation,
-                                " - ",
-                                store.storeRecommendFood),
-                            react_1.default.createElement(ViewCount, null,
-                                " ",
-                                store.visit)));
-                    }
-                    return null;
-                }))))),
-            react_1.default.createElement(Pagenation_div, null, useTotalPage && pagenation(useTotalPage, usePageNum))),
-        react_1.default.createElement(RightSide_div, null,
-            react_1.default.createElement(Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
-            react_1.default.createElement(SearchListTitle_h1, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
-            useTrustBest &&
-                useTrustBest.map((trust, index) => (react_1.default.createElement(RightSideImage_img, { key: index, src: trust.src }))))))));
+    return (react_1.default.createElement(react_1.default.Fragment, null, !useSearchNotFound
+        ? useSearchList && (react_1.default.createElement(OuterWrap_section, null,
+            react_1.default.createElement(SearchListWrap_div, null,
+                react_1.default.createElement(SearchListInner_div, null,
+                    react_1.default.createElement(SearchListTitle_h1, null,
+                        searchValue,
+                        " \uB9DB\uC9D1 \uC778\uAE30 \uAC80\uC0C9\uC21C\uC704"),
+                    Array.from({ length: useSearchList.length / 2 }).map((_, ulIndex) => (react_1.default.createElement(SertchList_ul, { key: ulIndex }, useSearchList.map((store, index) => {
+                        if (index >= ulIndex * 2 &&
+                            index < (ulIndex + 1) * 2) {
+                            return (react_1.default.createElement(SearchList_li, { key: index },
+                                react_1.default.createElement(FoodImg_img, { height: 239, src: store.imgurl }),
+                                react_1.default.createElement("br", null),
+                                react_1.default.createElement(StoreTitleScoreWrap, null,
+                                    react_1.default.createElement(styled_components_2.StyleSheetManager, { shouldForwardProp: (prop) => prop !== "maxChar" },
+                                        react_1.default.createElement(StoreTitle, { maxchar: 20 }, store.storename),
+                                        react_1.default.createElement(StoreScore, null, store.pointAVG))),
+                                react_1.default.createElement("div", null,
+                                    store.storeLocation,
+                                    " -",
+                                    " ",
+                                    store.storeRecommendFood),
+                                react_1.default.createElement(ViewCount, null,
+                                    " ",
+                                    store.visit)));
+                        }
+                        return null;
+                    }))))),
+                react_1.default.createElement(Pagenation_div, null, useTotalPage && pagenation(useTotalPage, usePageNum))),
+            react_1.default.createElement(RightSide_div, null,
+                react_1.default.createElement(Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
+                react_1.default.createElement(SearchListTitle_h1, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
+                useTrustBest &&
+                    useTrustBest.map((trust, index) => (react_1.default.createElement(RightSideImage_img, { key: index, src: trust.src }))))))
+        : useSearchNotFoundMessage));
 };
 exports.default = SearchList;
 const OuterWrap_section = styled_components_1.default.section `

@@ -3,19 +3,6 @@ import { useLocation, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { StyleSheetManager } from "styled-components";
 
-const data = [
-  { page: 1 },
-  { page: 2 },
-  { page: 3 },
-  { page: 4 },
-  { page: 5 },
-  { page: 6 },
-  { page: 7 },
-  { page: 8 },
-  { page: 9 }
-];
-
-
 interface SearchListDB {
   imgurl: string;
   storename: string;
@@ -35,9 +22,12 @@ const SearchList = () => {
   const [useTrustBest, setUseTrustBest] = useState<TrustBest[]>([]);
   const [useTotalPage, setUsrTotalPage] = useState<number>(0);
   const [usePageNum, setUsePageNum] = useState<number>(0);
+  const [useSearchNotFound, setUseSearchNotFound] = useState<boolean>(false);
+  const [useSearchNotFoundMessage, setUseSearchNotFoundMessage] = useState<string>("");
   // 현재 페이지 정보
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
+  
   
   
 
@@ -74,6 +64,12 @@ const SearchList = () => {
         return;
       }
       const data = await response.json();
+      if (data.message) { 
+        console.log(data);
+        console.log(response);
+        setUseSearchNotFound(true);
+        setUseSearchNotFoundMessage(data.message);
+      }
        // 가게 정보들
       setUseSearchList(data[1]);
       
@@ -106,20 +102,34 @@ const SearchList = () => {
     }
   };
 
-
+  // 페이징 로직
   const pagenation = (totalPage: number, pageNum: number) => {
-    let maxPage = totalPage;
-    let minPage = maxPage - 9;
-    console.log("totalPage" + totalPage);
-    if (maxPage % 10 !== 0) {
-      minPage = maxPage - (maxPage % 10) + 1
-    }
+    const keyword = { searchValue }.searchValue; //검색값
+
+    const pageBlockSize = 10; // 한 번에 표시할 페이지 수
+
+    // 현재 페이지가 속한 블록 계산
+    const currentPageBlock = Math.ceil(pageNum / pageBlockSize);
+
+    // 블록의 첫 페이지 계산
+    const minPage = (currentPageBlock - 1) * pageBlockSize + 1;
+
+    // 블록의 마지막 페이지 계산
+    const maxPage = Math.min(currentPageBlock * pageBlockSize, totalPage);
+
+    // //페이징이 끝까지 있을때
+    // let maxPage = Math.ceil(pageNum / 20) * 20;
+    // let minPage = maxPage - 9;
+
+    // //페이징이 끝까지 없을때
+    // if (totalPage % 10 !== 0) {
+    //   maxPage = totalPage;
+    //   minPage = maxPage - (maxPage % 10) + 1;
+    // }
 
     const pageArray: number[] = [];
-    console.log(maxPage);
-    console.log(minPage)
+
     for (let i = minPage; i <= maxPage; i += 1) {
-      console.log("페이지 올라간다"+i)
       pageArray.push(i);
     }
 
@@ -127,7 +137,7 @@ const SearchList = () => {
       <>
         {pageArray.map((page, index) => (
           <PagingButton_button key={index}>
-            <a href={`/search/${searchValue}?pagenum=${page}`}>{page}</a>
+            <a href={`/search/${keyword}?pagenum=${page}`}>{page}</a>
           </PagingButton_button>
         ))}
       </>
@@ -136,68 +146,78 @@ const SearchList = () => {
 
   return (
     <>
-      {useSearchList && (
-        <OuterWrap_section>
-          <SearchListWrap_div>
-            <SearchListInner_div>
-              <SearchListTitle_h1>
-                {searchValue} 맛집 인기 검색순위
-              </SearchListTitle_h1>
-              {/*데이터의 2분의 1만큼 for문 */}
-              {/*ul 하나당 li 2개*/}
-              {Array.from({ length: useSearchList.length / 2 }).map(
-                (_, ulIndex) => (
-                  <SertchList_ul key={ulIndex}>
-                    {useSearchList.map((store, index) => {
-                      if (index >= ulIndex * 2 && index < (ulIndex + 1) * 2) {
-                        return (
-                          <SearchList_li key={index}>
-                            <FoodImg_img height={239} src={store.imgurl} />
-                            <br />
-                            {/*가게타이틀 평점 */}
-                            <StoreTitleScoreWrap>
-                              <StyleSheetManager
-                                shouldForwardProp={(prop) => prop !== "maxChar"}
-                              >
-                                <StoreTitle maxchar={20}>
-                                  {store.storename}
-                                </StoreTitle>
-                                <StoreScore>{store.pointAVG}</StoreScore>
-                              </StyleSheetManager>
-                            </StoreTitleScoreWrap>
-                            <div>
-                              {store.storeLocation} - {store.storeRecommendFood}
-                            </div>
-                            <ViewCount> {store.visit}</ViewCount>
-                          </SearchList_li>
-                        );
-                      }
-                      return null;
-                    })}
-                  </SertchList_ul>
-                )
-              )}
-            </SearchListInner_div>
-            <Pagenation_div>
-              {useTotalPage && pagenation(useTotalPage, usePageNum)}
-            </Pagenation_div>
-          </SearchListWrap_div>
-          <RightSide_div>
-            <Map_div>지도 공간</Map_div>
-            <SearchListTitle_h1> 관련 콘텐츠 </SearchListTitle_h1>
-            {useTrustBest &&
-              useTrustBest.map((trust, index) => (
-                <RightSideImage_img
-                  key={index}
-                  src={trust.src}
-                ></RightSideImage_img>
-              ))}
-          </RightSide_div>
-        </OuterWrap_section>
-      )}
+      {!useSearchNotFound
+        ? useSearchList && (
+            <OuterWrap_section>
+              <SearchListWrap_div>
+                <SearchListInner_div>
+                  <SearchListTitle_h1>
+                    {searchValue} 맛집 인기 검색순위
+                  </SearchListTitle_h1>
+                  {/*데이터의 2분의 1만큼 for문 */}
+                  {/*ul 하나당 li 2개*/}
+                  {Array.from({ length: useSearchList.length / 2 }).map(
+                    (_, ulIndex) => (
+                      <SertchList_ul key={ulIndex}>
+                        {useSearchList.map((store, index) => {
+                          if (
+                            index >= ulIndex * 2 &&
+                            index < (ulIndex + 1) * 2
+                          ) {
+                            return (
+                              <SearchList_li key={index}>
+                                <FoodImg_img height={239} src={store.imgurl} />
+                                <br />
+                                {/*가게타이틀 평점 */}
+                                <StoreTitleScoreWrap>
+                                  <StyleSheetManager
+                                    shouldForwardProp={(prop) =>
+                                      prop !== "maxChar"
+                                    }
+                                  >
+                                    <StoreTitle maxchar={20}>
+                                      {store.storename}
+                                    </StoreTitle>
+                                    <StoreScore>{store.pointAVG}</StoreScore>
+                                  </StyleSheetManager>
+                                </StoreTitleScoreWrap>
+                                <div>
+                                  {store.storeLocation} -{" "}
+                                  {store.storeRecommendFood}
+                                </div>
+                                <ViewCount> {store.visit}</ViewCount>
+                              </SearchList_li>
+                            );
+                          }
+                          return null;
+                        })}
+                      </SertchList_ul>
+                    )
+                  )}
+                </SearchListInner_div>
+                <Pagenation_div>
+                  {useTotalPage && pagenation(useTotalPage, usePageNum)}
+                </Pagenation_div>
+              </SearchListWrap_div>
+              <RightSide_div>
+                <Map_div>지도 공간</Map_div>
+                <SearchListTitle_h1> 관련 콘텐츠 </SearchListTitle_h1>
+                {useTrustBest &&
+                  useTrustBest.map((trust, index) => (
+                    <RightSideImage_img
+                      key={index}
+                      src={trust.src}
+                    ></RightSideImage_img>
+                  ))}
+              </RightSide_div>
+            </OuterWrap_section>
+          )
+        : useSearchNotFoundMessage
+      }
     </>
   );
 };
+
 
 export default SearchList;
 

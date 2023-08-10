@@ -1,4 +1,4 @@
-const trustBest = require("../../Model/TrustBest/TrustBest");
+const trustBest = require("../../Model/TrustBest/trustBest");
 
 exports.getTrustBest= (req, res) => {
   trustBest

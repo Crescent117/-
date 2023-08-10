@@ -166,12 +166,15 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
         const totalPagesObject = { totalPage: totalPages };
         // 검색값으로 데이터 뽑아오기
         const keywordSearchResults = yield searchList_1.default.aggregate(keywordSearchPipeline);
-        console.log(keywordSearchResults);
+        //console.log(keywordSearchResults);
+        console.log(keywordSearchResults.length === 0);
+        console.log(keywordSearchResults.length);
         if (keywordSearchResults.length === 0) {
             return res
                 .status(200)
-                .json({ message: "검색한 값의 결과는 존재하지 않습니다." });
+                .json({ message: `${keyword}에 대한 검색 결과가 없습니다.` });
         }
+        console.log("설마 여기 오니");
         // 값이 없을시 처리
         // 반환 배열
         const responseSearchList = yield Promise.all(keywordSearchResults.map((result) => processStoreInfo(result)));
