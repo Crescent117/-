@@ -121,26 +121,18 @@ const SearchList = () => {
         const minPage = (currentPageBlock - 1) * pageBlockSize + 1;
         // 블록의 마지막 페이지 계산
         const maxPage = Math.min(currentPageBlock * pageBlockSize, totalPage);
-        // //페이징이 끝까지 있을때
-        // let maxPage = Math.ceil(pageNum / 20) * 20;
-        // let minPage = maxPage - 9;
-        // //페이징이 끝까지 없을때
-        // if (totalPage % 10 !== 0) {
-        //   maxPage = totalPage;
-        //   minPage = maxPage - (maxPage % 10) + 1;
-        // }
         const pageArray = [];
         for (let i = minPage; i <= maxPage; i += 1) {
             pageArray.push(i);
         }
         return (react_1.default.createElement(react_1.default.Fragment, null, pageArray.map((page, index) => (react_1.default.createElement(PagingButton_button, { key: index },
-            react_1.default.createElement("a", { href: `/search/${keyword}?pagenum=${page}` }, page))))));
+            react_1.default.createElement(PagingButtonText_a, { href: `/search/${keyword}?pagenum=${page}` }, page))))));
     };
     return (react_1.default.createElement(react_1.default.Fragment, null, !useSearchNotFound
         ? useSearchList && (react_1.default.createElement(OuterWrap_section, null,
             react_1.default.createElement(SearchListWrap_div, null,
                 react_1.default.createElement(SearchListInner_div, null,
-                    react_1.default.createElement(SearchListTitle_h1, null,
+                    react_1.default.createElement(SearchListTitle_title, null,
                         searchValue,
                         " \uB9DB\uC9D1 \uC778\uAE30 \uAC80\uC0C9\uC21C\uC704"),
                     Array.from({ length: useSearchList.length / 2 }).map((_, ulIndex) => (react_1.default.createElement(SertchList_ul, { key: ulIndex }, useSearchList.map((store, index) => {
@@ -167,7 +159,7 @@ const SearchList = () => {
                 react_1.default.createElement(Pagenation_div, null, useTotalPage && pagenation(useTotalPage, usePageNum))),
             react_1.default.createElement(RightSide_div, null,
                 react_1.default.createElement(Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
-                react_1.default.createElement(SearchListTitle_h1, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
+                react_1.default.createElement(SearchListTitle_title, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
                 useTrustBest &&
                     useTrustBest.map((trust, index) => (react_1.default.createElement(RightSideImage_img, { key: index, src: trust.src }))))))
         : useSearchNotFoundMessage));
@@ -176,9 +168,11 @@ exports.default = SearchList;
 const OuterWrap_section = styled_components_1.default.section `
   display: flex;
 `;
-const SearchListTitle_h1 = styled_components_1.default.h1 `
-  color:orange;
-  padding-left:10px;
+const SearchListTitle_title = styled_components_1.default.p `
+  color: orange;
+  padding-left: 10px;
+  font-size: 2em;
+  margin:30px 0;
 `;
 const SearchListWrap_div = styled_components_1.default.div `
   width:100%;
@@ -202,6 +196,7 @@ const SearchList_li = styled_components_1.default.li `
 const FoodImg_img = styled_components_1.default.img `
   width: 359px;
   height: ${({ height }) => `${height}px`};
+  cursor:pointer;
 `;
 const StoreTitleScoreWrap = styled_components_1.default.div `
   display: flex;
@@ -211,6 +206,7 @@ const StoreTitleScoreWrap = styled_components_1.default.div `
 const StoreTitle = styled_components_1.default.span `
   font-size: 24px;
   color: grey;
+  cursor:pointer;
   ${({ maxchar }) => maxchar && (0, styled_components_1.css) `
       white-space: nowrap;
       overflow: hidden;
@@ -259,7 +255,18 @@ const RightSideImage_img = styled_components_1.default.img `
 `;
 const Pagenation_div = styled_components_1.default.div `
   text-align:center;
+  margin: 50px 0;
 `;
 const PagingButton_button = styled_components_1.default.button `
+  margin: 0 15px;
+  padding: 12px 20px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid #c0c0c0;
+`;
+const PagingButtonText_a = styled_components_1.default.a `
+  text-decoration: none;
+  color: #c0c0c0;
+  fontsize: 2em;
 `;
 //# sourceMappingURL=searchList.js.map

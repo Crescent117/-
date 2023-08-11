@@ -105,28 +105,10 @@ const SearchList = () => {
   // 페이징 로직
   const pagenation = (totalPage: number, pageNum: number) => {
     const keyword = { searchValue }.searchValue; //검색값
-
     const pageBlockSize = 10; // 한 번에 표시할 페이지 수
-
-    // 현재 페이지가 속한 블록 계산
-    const currentPageBlock = Math.ceil(pageNum / pageBlockSize);
-
-    // 블록의 첫 페이지 계산
-    const minPage = (currentPageBlock - 1) * pageBlockSize + 1;
-
-    // 블록의 마지막 페이지 계산
-    const maxPage = Math.min(currentPageBlock * pageBlockSize, totalPage);
-
-    // //페이징이 끝까지 있을때
-    // let maxPage = Math.ceil(pageNum / 20) * 20;
-    // let minPage = maxPage - 9;
-
-    // //페이징이 끝까지 없을때
-    // if (totalPage % 10 !== 0) {
-    //   maxPage = totalPage;
-    //   minPage = maxPage - (maxPage % 10) + 1;
-    // }
-
+    const currentPageBlock = Math.ceil(pageNum / pageBlockSize); // 현재 페이지가 속한 블록 계산
+    const minPage = (currentPageBlock - 1) * pageBlockSize + 1; // 블록의 첫 페이지 계산
+    const maxPage = Math.min(currentPageBlock * pageBlockSize, totalPage); // 블록의 마지막 페이지 계산
     const pageArray: number[] = [];
 
     for (let i = minPage; i <= maxPage; i += 1) {
@@ -137,7 +119,9 @@ const SearchList = () => {
       <>
         {pageArray.map((page, index) => (
           <PagingButton_button key={index}>
-            <a href={`/search/${keyword}?pagenum=${page}`}>{page}</a>
+            <PagingButtonText_a href={`/search/${keyword}?pagenum=${page}`}>
+              {page}
+            </PagingButtonText_a>
           </PagingButton_button>
         ))}
       </>
@@ -151,9 +135,9 @@ const SearchList = () => {
             <OuterWrap_section>
               <SearchListWrap_div>
                 <SearchListInner_div>
-                  <SearchListTitle_h1>
+                  <SearchListTitle_title>
                     {searchValue} 맛집 인기 검색순위
-                  </SearchListTitle_h1>
+                  </SearchListTitle_title>
                   {/*데이터의 2분의 1만큼 for문 */}
                   {/*ul 하나당 li 2개*/}
                   {Array.from({ length: useSearchList.length / 2 }).map(
@@ -201,7 +185,7 @@ const SearchList = () => {
               </SearchListWrap_div>
               <RightSide_div>
                 <Map_div>지도 공간</Map_div>
-                <SearchListTitle_h1> 관련 콘텐츠 </SearchListTitle_h1>
+                <SearchListTitle_title> 관련 콘텐츠 </SearchListTitle_title>
                 {useTrustBest &&
                   useTrustBest.map((trust, index) => (
                     <RightSideImage_img
@@ -212,8 +196,7 @@ const SearchList = () => {
               </RightSide_div>
             </OuterWrap_section>
           )
-        : useSearchNotFoundMessage
-      }
+        : useSearchNotFoundMessage}
     </>
   );
 };
@@ -225,17 +208,23 @@ type FoodImg_size = {
   height:number
 }
 
-interface StoreTitleProps {
+type StoreTitleProps = {
   maxchar: number;
+}
+
+type CurrentButton = {
+
 }
 
 const OuterWrap_section = styled.section`
   display: flex;
 `;
 
-const SearchListTitle_h1 = styled.h1`
-  color:orange;
-  padding-left:10px;
+const SearchListTitle_title = styled.p`
+  color: orange;
+  padding-left: 10px;
+  font-size: 2em;
+  margin:30px 0;
 `;
 
 const SearchListWrap_div = styled.div`
@@ -263,6 +252,7 @@ const SearchList_li = styled.li`
 const FoodImg_img = styled.img<FoodImg_size>`
   width: 359px;
   height: ${({ height }) => `${height}px`};
+  cursor:pointer;
 `;
 
 const StoreTitleScoreWrap = styled.div`
@@ -274,6 +264,7 @@ const StoreTitleScoreWrap = styled.div`
 const StoreTitle = styled.span <StoreTitleProps>`
   font-size: 24px;
   color: grey;
+  cursor:pointer;
   ${({ maxchar }) =>
     maxchar && css`
       white-space: nowrap;
@@ -329,7 +320,19 @@ const RightSideImage_img = styled.img`
 
 const Pagenation_div = styled.div`
   text-align:center;
+  margin: 50px 0;
 `;
 
-const PagingButton_button = styled.button`
+const PagingButton_button = styled.button<CurrentButton>`
+  margin: 0 15px;
+  padding: 12px 20px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid #c0c0c0;
+`;
+
+const PagingButtonText_a = styled.a<CurrentButton>`
+  text-decoration: none;
+  color: #c0c0c0;
+  fontsize: 2em;
 `;
