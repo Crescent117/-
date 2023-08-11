@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ImgHTMLAttributes } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 import { StyleSheetManager } from "styled-components";
@@ -12,8 +12,10 @@ interface SearchListDB {
   visit: number;
 }
 
-interface TrustBest { 
-  src:string
+interface TrustBest {
+  src: string;
+  titleText: string;
+  content: string
 }
 
 const SearchList = () => {
@@ -41,8 +43,7 @@ const SearchList = () => {
     // 현재 페이지 정보
     const pageNumParams = searchParams.get("pagenum");
     let pageNum: number;
-    console.log(pageNumParams);
-    console.log(searchValue)
+    
     if (pageNumParams == null) {
       pageNum = 1;
     } else { 
@@ -208,10 +209,18 @@ const SearchList = () => {
                 <SearchListTitle_title> 관련 콘텐츠 </SearchListTitle_title>
                 {useTrustBest &&
                   useTrustBest.map((trust, index) => (
-                    <RightSideImage_img
-                      key={index}
-                      src={trust.src}
-                    ></RightSideImage_img>
+                    <>
+                      <ImageContainer height={165}>
+                        <RightSideImage_img
+                          key={index}
+                          src={trust.src}
+                        ></RightSideImage_img>
+                        <ImageTitleText top={30}>
+                          {trust.titleText}
+                        </ImageTitleText>
+                        <ImageContent top={50}>"{trust.content}"</ImageContent>
+                      </ImageContainer>
+                    </>
                   ))}
               </RightSide_div>
             </OuterWrap_section>
@@ -234,6 +243,14 @@ type StoreTitleProps = {
 
 type CurrentButton = {
   color:string
+}
+
+type TextHeight = {
+  top: number;
+};
+
+interface ImageListProps extends ImgHTMLAttributes<HTMLImageElement> {
+  height: number;
 }
 
 const OuterWrap_section = styled.section`
@@ -355,4 +372,39 @@ const PagingButtonText_p = styled.a<CurrentButton>`
   text-decoration: none;
   color: ${({ color }) => `#${ color }`};
   fontsize: 2em;
+`;
+
+const ImageTitleText = styled.p<TextHeight>`
+  position: absolute;
+  font-size: 20px;
+  top: ${({ top }) => `${top}%`};
+  left: 0;
+  right: 0;
+  white-space: normal;
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-align: center;
+`;
+
+const ImageContent = styled.p<TextHeight>`
+  position: absolute;
+  top: ${({ top }) => `${top}%`};
+  left: 0;
+  right: 0;
+  white-space: normal;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-align: center;
+`;
+
+const ImageContainer = styled.div<ImageListProps>`
+  position: relative;
+  width: 100%;
+  height: ${({ height }) => `${height}px`};
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  text-align: center;
 `;

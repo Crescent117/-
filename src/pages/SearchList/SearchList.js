@@ -56,8 +56,6 @@ const SearchList = () => {
         // 현재 페이지 정보
         const pageNumParams = searchParams.get("pagenum");
         let pageNum;
-        console.log(pageNumParams);
-        console.log(searchValue);
         if (pageNumParams == null) {
             pageNum = 1;
         }
@@ -162,7 +160,14 @@ const SearchList = () => {
                 react_1.default.createElement(Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
                 react_1.default.createElement(SearchListTitle_title, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
                 useTrustBest &&
-                    useTrustBest.map((trust, index) => (react_1.default.createElement(RightSideImage_img, { key: index, src: trust.src }))))))
+                    useTrustBest.map((trust, index) => (react_1.default.createElement(react_1.default.Fragment, null,
+                        react_1.default.createElement(ImageContainer, { height: 165 },
+                            react_1.default.createElement(RightSideImage_img, { key: index, src: trust.src }),
+                            react_1.default.createElement(ImageTitleText, { top: 30 }, trust.titleText),
+                            react_1.default.createElement(ImageContent, { top: 50 },
+                                "\"",
+                                trust.content,
+                                "\""))))))))
         : useSearchNotFoundMessage));
 };
 exports.default = SearchList;
@@ -269,5 +274,37 @@ const PagingButtonText_p = styled_components_1.default.a `
   text-decoration: none;
   color: ${({ color }) => `#${color}`};
   fontsize: 2em;
+`;
+const ImageTitleText = styled_components_1.default.p `
+  position: absolute;
+  font-size: 20px;
+  top: ${({ top }) => `${top}%`};
+  left: 0;
+  right: 0;
+  white-space: normal;
+  color: white;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-align: center;
+`;
+const ImageContent = styled_components_1.default.p `
+  position: absolute;
+  top: ${({ top }) => `${top}%`};
+  left: 0;
+  right: 0;
+  white-space: normal;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-align: center;
+`;
+const ImageContainer = styled_components_1.default.div `
+  position: relative;
+  width: 100%;
+  height: ${({ height }) => `${height}px`};
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  text-align: center;
 `;
 //# sourceMappingURL=searchList.js.map
