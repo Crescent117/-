@@ -113,20 +113,21 @@ const SearchList = () => {
     });
     // 페이징 로직
     const pagenation = (totalPage, pageNum) => {
-        const keyword = { searchValue }.searchValue; //검색값
+        const keyword = { searchValue }.searchValue || ""; //검색값
         const pageBlockSize = 10; // 한 번에 표시할 페이지 수
-        // 현재 페이지가 속한 블록 계산
-        const currentPageBlock = Math.ceil(pageNum / pageBlockSize);
-        // 블록의 첫 페이지 계산
-        const minPage = (currentPageBlock - 1) * pageBlockSize + 1;
-        // 블록의 마지막 페이지 계산
-        const maxPage = Math.min(currentPageBlock * pageBlockSize, totalPage);
+        const currentPageBlock = Math.ceil(pageNum / pageBlockSize); // 현재 페이지가 속한 블록 계산
+        const minPage = (currentPageBlock - 1) * pageBlockSize + 1; // 블록의 첫 페이지 계산
+        const maxPage = Math.min(currentPageBlock * pageBlockSize, totalPage); // 블록의 마지막 페이지 계산
         const pageArray = [];
         for (let i = minPage; i <= maxPage; i += 1) {
             pageArray.push(i);
         }
-        return (react_1.default.createElement(react_1.default.Fragment, null, pageArray.map((page, index) => (react_1.default.createElement(PagingButton_button, { key: index },
-            react_1.default.createElement(PagingButtonText_a, { href: `/search/${keyword}?pagenum=${page}` }, page))))));
+        return (react_1.default.createElement(react_1.default.Fragment, null, pageArray.map((page, index) => page === pageNum ? (react_1.default.createElement(PagingButton_button, { key: index, color: "FF7F00", onClick: () => pagingMove(keyword, page) },
+            react_1.default.createElement(PagingButtonText_p, { color: "FF7F00" }, page))) : (react_1.default.createElement(PagingButton_button, { key: index, color: "C0C0C0", onClick: () => pagingMove(keyword, page) },
+            react_1.default.createElement(PagingButtonText_p, { color: "C0C0C0" }, page))))));
+    };
+    const pagingMove = (keyword, page) => {
+        window.location.href = `/search/${keyword}?pagenum=${page}`;
     };
     return (react_1.default.createElement(react_1.default.Fragment, null, !useSearchNotFound
         ? useSearchList && (react_1.default.createElement(OuterWrap_section, null,
@@ -169,7 +170,7 @@ const OuterWrap_section = styled_components_1.default.section `
   display: flex;
 `;
 const SearchListTitle_title = styled_components_1.default.p `
-  color: orange;
+  color: #FF7F00;
   padding-left: 10px;
   font-size: 2em;
   margin:30px 0;
@@ -215,7 +216,7 @@ const StoreTitle = styled_components_1.default.span `
     `}
 `;
 const StoreScore = styled_components_1.default.span `
-  color: orange;
+  color: #FF7F00;
   margin-left: 10px;
   font-size: 24px;
 `;
@@ -262,11 +263,11 @@ const PagingButton_button = styled_components_1.default.button `
   padding: 12px 20px;
   border-radius: 50%;
   background-color: white;
-  border: 2px solid #c0c0c0;
+  border: 2px solid ${({ color }) => `#${color}`};;
 `;
-const PagingButtonText_a = styled_components_1.default.a `
+const PagingButtonText_p = styled_components_1.default.a `
   text-decoration: none;
-  color: #c0c0c0;
+  color: ${({ color }) => `#${color}`};
   fontsize: 2em;
 `;
 //# sourceMappingURL=searchList.js.map

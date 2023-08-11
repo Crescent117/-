@@ -102,9 +102,10 @@ const SearchList = () => {
     }
   };
 
+
   // 페이징 로직
   const pagenation = (totalPage: number, pageNum: number) => {
-    const keyword = { searchValue }.searchValue; //검색값
+   const keyword: string = { searchValue }.searchValue || ""; //검색값
     const pageBlockSize = 10; // 한 번에 표시할 페이지 수
     const currentPageBlock = Math.ceil(pageNum / pageBlockSize); // 현재 페이지가 속한 블록 계산
     const minPage = (currentPageBlock - 1) * pageBlockSize + 1; // 블록의 첫 페이지 계산
@@ -117,15 +118,34 @@ const SearchList = () => {
 
     return (
       <>
-        {pageArray.map((page, index) => (
-          <PagingButton_button key={index}>
-            <PagingButtonText_a href={`/search/${keyword}?pagenum=${page}`}>
-              {page}
-            </PagingButtonText_a>
-          </PagingButton_button>
-        ))}
+        {pageArray.map((page, index) =>
+          page === pageNum ? (
+            <PagingButton_button
+              key={index}
+              color={"FF7F00"}
+              onClick={() => pagingMove(keyword, page)}
+            >
+              <PagingButtonText_p color={"FF7F00"}>
+                {page}
+              </PagingButtonText_p>
+            </PagingButton_button>
+          ) : (
+            <PagingButton_button
+              key={index}
+              color={"C0C0C0"}
+              onClick={() => pagingMove(keyword, page)}
+            >
+              <PagingButtonText_p color={"C0C0C0"}>{page}</PagingButtonText_p>
+            </PagingButton_button>
+          )
+        )}
       </>
     );
+  };
+
+  
+  const pagingMove = (keyword: string, page: number) => {
+    window.location.href = `/search/${keyword}?pagenum=${page}`;
   };
 
   return (
@@ -213,7 +233,7 @@ type StoreTitleProps = {
 }
 
 type CurrentButton = {
-
+  color:string
 }
 
 const OuterWrap_section = styled.section`
@@ -221,7 +241,7 @@ const OuterWrap_section = styled.section`
 `;
 
 const SearchListTitle_title = styled.p`
-  color: orange;
+  color: #FF7F00;
   padding-left: 10px;
   font-size: 2em;
   margin:30px 0;
@@ -275,7 +295,7 @@ const StoreTitle = styled.span <StoreTitleProps>`
 `;
 
 const StoreScore = styled.span`
-  color: orange;
+  color: #FF7F00;
   margin-left: 10px;
   font-size: 24px;
 `;
@@ -328,11 +348,11 @@ const PagingButton_button = styled.button<CurrentButton>`
   padding: 12px 20px;
   border-radius: 50%;
   background-color: white;
-  border: 2px solid #c0c0c0;
+  border: 2px solid ${({ color }) => `#${color}`};;
 `;
 
-const PagingButtonText_a = styled.a<CurrentButton>`
+const PagingButtonText_p = styled.a<CurrentButton>`
   text-decoration: none;
-  color: #c0c0c0;
+  color: ${({ color }) => `#${ color }`};
   fontsize: 2em;
 `;
