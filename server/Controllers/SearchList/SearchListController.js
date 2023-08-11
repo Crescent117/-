@@ -47,7 +47,6 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
     const pageNum = Number(req.query.pageNum) - 1 || 0;
     const pageSize = 20; // 페이지당 아이템 수
     const skipAmount = pageNum * pageSize; // 건너뛸 아이템 수
-    console.log(pageNum);
     try {
         const commonPipeline = [
             {
@@ -167,14 +166,11 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
         // 검색값으로 데이터 뽑아오기
         const keywordSearchResults = yield searchList_1.default.aggregate(keywordSearchPipeline);
         //console.log(keywordSearchResults);
-        console.log(keywordSearchResults.length === 0);
-        console.log(keywordSearchResults.length);
         if (keywordSearchResults.length === 0) {
             return res
                 .status(200)
-                .json({ message: `${keyword}에 대한 검색 결과가 없습니다.` });
+                .json({ message: `"${keyword}"에 대한 검색 결과가 없습니다.` });
         }
-        console.log("설마 여기 오니");
         // 값이 없을시 처리
         // 반환 배열
         const responseSearchList = yield Promise.all(keywordSearchResults.map((result) => processStoreInfo(result)));

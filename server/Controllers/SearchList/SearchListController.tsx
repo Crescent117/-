@@ -54,7 +54,6 @@ exports.getSearchList = async (req: Request, res: Response) => {
   const pageNum: number = Number(req.query.pageNum) - 1 || 0;
   const pageSize = 20; // 페이지당 아이템 수
   const skipAmount = pageNum * pageSize; // 건너뛸 아이템 수
-  console.log(pageNum);
 
   try {
     const commonPipeline = [
@@ -183,14 +182,12 @@ exports.getSearchList = async (req: Request, res: Response) => {
       keywordSearchPipeline
     );
       //console.log(keywordSearchResults);
-    console.log(keywordSearchResults.length === 0);
-    console.log(keywordSearchResults.length);
+   
     if (keywordSearchResults.length === 0) {
       return res
         .status(200)
-        .json({ message: `${keyword}에 대한 검색 결과가 없습니다.` });
+        .json({ message: `"${keyword}"에 대한 검색 결과가 없습니다.` });
     }
-    console.log("설마 여기 오니")
     // 값이 없을시 처리
 
     // 반환 배열
