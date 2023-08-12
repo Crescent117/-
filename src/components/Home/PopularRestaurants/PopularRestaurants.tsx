@@ -1,17 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { WindowSizeChangeProps } from "../shared_interface";
-import {
-  Module_title_wrap,
-  Module_title_name,
-  Module_more,
-  SliderContainer,
-  SlideButton,
-  ImageWrapper,
-  ImageContainer,
-  Image_list,
-  ImageTitleText,
-  ImageContent,
-} from "../shared_componentCSS";
+import * as S from "../shared_componentCSS";
 
 interface TrustBestDB {
   url: string;
@@ -70,16 +59,16 @@ const PopularRestaurants = ({
     <>
       {useTrustBestData && (
         <section>
-          <Module_title_wrap>
-            <Module_title_name>믿고 보는 맛집 리스트</Module_title_name>
-            <Module_more>리스트 더보기</Module_more>
-          </Module_title_wrap>
-          <SliderContainer>
-            <SlideButton onClick={clickSlideLeft} style={{ marginRight: 10 }}>
+          <S.Module_title_wrap>
+            <S.Module_title_name>믿고 보는 맛집 리스트</S.Module_title_name>
+            <S.Module_more>리스트 더보기</S.Module_more>
+          </S.Module_title_wrap>
+          <S.SliderContainer>
+            <S.SlideButton onClick={clickSlideLeft} style={{ marginRight: 10 }}>
               &lt;
-            </SlideButton>
+            </S.SlideButton>
 
-            <ImageWrapper columns={columns} rows={2} height={492}>
+            <S.ImageWrapper columns={columns} rows={2} height={492}>
               <>
                 {useTrustBestData
                   .slice(
@@ -88,30 +77,32 @@ const PopularRestaurants = ({
                       itemsPerPage
                   )
                   .map((image, index) => (
-                    <ImageContainer
+                    <S.ImageContainer
                       key={index}
                       onDragStart={(e) => e.preventDefault()}
                       height={236}
                       onClick={() => moveTopList(image.url)}
                     >
-                      <Image_list
+                      <S.Image_list
                         src={image.src}
                         alt={image.alt}
                         height={236}
                       />
-                      <ImageTitleText top={30}>
+                      <S.ImageTitleText top={30}>
                         {image.titleText}
-                      </ImageTitleText>
-                      <ImageContent top={50}>"{image.content}"</ImageContent>
-                    </ImageContainer>
+                      </S.ImageTitleText>
+                      <S.ImageContent top={50}>
+                        "{image.content}"
+                      </S.ImageContent>
+                    </S.ImageContainer>
                   ))}
               </>
-            </ImageWrapper>
+            </S.ImageWrapper>
 
-            <SlideButton onClick={clickSlideRight} style={{ marginLeft: 10 }}>
+            <S.SlideButton onClick={clickSlideRight} style={{ marginLeft: 10 }}>
               &gt;
-            </SlideButton>
-          </SliderContainer>
+            </S.SlideButton>
+          </S.SliderContainer>
         </section>
       )}
     </>

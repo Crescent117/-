@@ -1,13 +1,5 @@
 import React, {useState} from "react";
-import {
-  HomeBanner,
-  HomeBannerSearchWrap,
-  HomeBannerLabel,
-  HomeBannerInput,
-  HomeBannerButton,
-  HomeBannerSearchIcon,
-  HomeBannerText,
-} from "./homeBannerCSS"; 
+import * as S from "./homeBannerCSS"; 
 
 const Banner = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -39,17 +31,17 @@ const Banner = () => {
     
   }
   return (
-    <HomeBanner>
-      <HomeBannerText>
+    <S.HomeBanner>
+      <S.HomeBannerText>
         솔직한 리뷰, 믿을 수 있는 평점!
         <br></br>더 조은 맛집 리스트!
-      </HomeBannerText>
-      <HomeBannerSearchWrap>
-        <HomeBannerLabel>
+      </S.HomeBannerText>
+      <S.HomeBannerSearchWrap>
+        <S.HomeBannerLabel>
           <span>
-            <HomeBannerSearchIcon src="https://w7.pngwing.com/pngs/410/185/png-transparent-magnifying-glass-computer-icons-magnifying-glass-glass-art-symbol-thumbnail.png" />
+            <S.HomeBannerSearchIcon src="https://w7.pngwing.com/pngs/410/185/png-transparent-magnifying-glass-computer-icons-magnifying-glass-glass-art-symbol-thumbnail.png" />
           </span>
-          <HomeBannerInput
+          <S.HomeBannerInput
             id="searchValue"
             type="text"
             placeholder="지역, 식당 또는 음식"
@@ -58,14 +50,14 @@ const Banner = () => {
             onKeyDown={enterKeyDown}
             onClick={popupSearch}
           />
-          <HomeBannerButton
+          <S.HomeBannerButton
             type="button"
             value="검색"
             onClick={searchListGo}
           />
-        </HomeBannerLabel>
-      </HomeBannerSearchWrap>
-    </HomeBanner>
+        </S.HomeBannerLabel>
+      </S.HomeBannerSearchWrap>
+    </S.HomeBanner>
   );
 };
 

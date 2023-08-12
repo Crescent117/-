@@ -1,17 +1,6 @@
 import React, { useState } from "react";
 import { WindowSizeChangeProps } from "../shared_interface";
-import {
-  Module_title_wrap,
-  Module_title_name,
-  Module_more,
-  SliderContainer,
-  SlideButton,
-  ImageWrapper,
-  ImageContainer,
-  Image_list,
-  ImageTitleText,
-  ImageContent,
-} from "../shared_componentCSS";
+import * as S from "../shared_componentCSS";
 
 const regionFoodBest = [
   {
@@ -70,26 +59,26 @@ const RegionRestaurants = ({
 
   return (
     <section>
-      <Module_title_wrap>
-        <Module_title_name>지역별 인기 맛집</Module_title_name>
-        <Module_more>스토리 더보기</Module_more>
-      </Module_title_wrap>
+      <S.Module_title_wrap>
+        <S.Module_title_name>지역별 인기 맛집</S.Module_title_name>
+        <S.Module_more>스토리 더보기</S.Module_more>
+      </S.Module_title_wrap>
 
-      <SliderContainer
+      <S.SliderContainer
         style={{
           marginLeft: columns !== 2 ? 80 : 0,
           marginRight: columns !== 2 ? 80 : 0,
         }}
       >
         {columns === 2 && (
-          <SlideButton
+          <S.SlideButton
             onClick={clickRegionSlideLeft}
             style={{ marginRight: 10 }}
           >
             &lt;
-          </SlideButton>
+          </S.SlideButton>
         )}
-        <ImageWrapper columns={columns} rows={2} height={492}>
+        <S.ImageWrapper columns={columns} rows={2} height={492}>
           <>
             {regionFoodBest
               .slice(
@@ -98,27 +87,29 @@ const RegionRestaurants = ({
                   itemsPerPage
               )
               .map((image, index) => (
-                <ImageContainer
+                <S.ImageContainer
                   key={index}
                   onDragStart={(e) => e.preventDefault()}
                   height={236}
                 >
-                  <Image_list src={image.src} alt={image.alt} height={236} />
-                  <ImageTitleText top={30}>{image.titleText}</ImageTitleText>
-                  <ImageContent top={60}>{image.content}</ImageContent>
-                </ImageContainer>
+                  <S.Image_list src={image.src} alt={image.alt} height={236} />
+                  <S.ImageTitleText top={30}>
+                    {image.titleText}
+                  </S.ImageTitleText>
+                  <S.ImageContent top={60}>{image.content}</S.ImageContent>
+                </S.ImageContainer>
               ))}
           </>
-        </ImageWrapper>
+        </S.ImageWrapper>
         {columns === 2 && (
-          <SlideButton
+          <S.SlideButton
             onClick={clickRegionSlideRight}
             style={{ marginLeft: 10 }}
           >
             &gt;
-          </SlideButton>
+          </S.SlideButton>
         )}
-      </SliderContainer>
+      </S.SliderContainer>
     </section>
   );
 };

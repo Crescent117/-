@@ -1,9 +1,7 @@
-import { ErrorMessage, ImageContainer, ImageContent, ImageTitleText, Map_div, OuterWrap_section, PagingButtonText_p, PagingButton_button, RightSideImage_img, RightSide_div, SearchListTitle_title, SearchListWrap_div } from "../../components/SearchList/searchListCss";
-import ExistSearchStoreList from "../../components/SearchList/existSearchStoreList";
+import * as S from "../../components/SearchList/searchListCss";
+import ExistSearchStoreList from "../../components/SearchList/ExistSearchStoreList/existSearchStoreList";
 import React, { useEffect, useState, ImgHTMLAttributes } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import styled, { css } from "styled-components";
-import { StyleSheetManager } from "styled-components";
 
 interface SearchListDB {
   imgurl: string;
@@ -69,58 +67,63 @@ const SearchList = () => {
     <>
       {!useSearchNotFound ? (
         useSearchList && (
-          <OuterWrap_section>
+          <S.OuterWrap_section>
+            {/* DB 값이 존재할 때 출력 */}
             <ExistSearchStoreList
               setUseSearchNotFoundMessage={setUseSearchNotFoundMessage}
               setUseSearchNotFound={setUseSearchNotFound}
             />
-            <RightSide_div>
-              <Map_div>지도 공간</Map_div>
-              <SearchListTitle_title> 관련 콘텐츠 </SearchListTitle_title>
+            <S.RightSide_div>
+              <S.Map_div>지도 공간</S.Map_div>
+              <S.SearchListTitle_title> 관련 콘텐츠 </S.SearchListTitle_title>
               {useTrustBest &&
                 useTrustBest.map((trust, index) => (
                   <>
-                    <ImageContainer height={165}>
-                      <RightSideImage_img
+                    <S.ImageContainer height={165}>
+                      <S.RightSideImage_img
                         key={index}
                         src={trust.src}
-                      ></RightSideImage_img>
-                      <ImageTitleText top={30}>
+                      ></S.RightSideImage_img>
+                      <S.ImageTitleText top={30}>
                         {trust.titleText}
-                      </ImageTitleText>
-                      <ImageContent top={50}>"{trust.content}"</ImageContent>
-                    </ImageContainer>
+                      </S.ImageTitleText>
+                      <S.ImageContent top={50}>
+                        "{trust.content}"
+                      </S.ImageContent>
+                    </S.ImageContainer>
                   </>
                 ))}
-            </RightSide_div>
-          </OuterWrap_section>
+            </S.RightSide_div>
+          </S.OuterWrap_section>
         )
       ) : (
         <>
-          <OuterWrap_section>
-            <SearchListWrap_div>
-              <ErrorMessage>{useSearchNotFoundMessage}</ErrorMessage>
-            </SearchListWrap_div>
-            <RightSide_div>
-              <Map_div>지도 공간</Map_div>
-              <SearchListTitle_title> 관련 콘텐츠 </SearchListTitle_title>
+          <S.OuterWrap_section>
+            <S.SearchListWrap_div>
+              <S.ErrorMessage>{useSearchNotFoundMessage}</S.ErrorMessage>
+            </S.SearchListWrap_div>
+            <S.RightSide_div>
+              <S.Map_div>지도 공간</S.Map_div>
+              <S.SearchListTitle_title> 관련 콘텐츠 </S.SearchListTitle_title>
               {useTrustBest &&
                 useTrustBest.map((trust, index) => (
                   <>
-                    <ImageContainer height={165}>
-                      <RightSideImage_img
+                    <S.ImageContainer height={165}>
+                      <S.RightSideImage_img
                         key={index}
                         src={trust.src}
-                      ></RightSideImage_img>
-                      <ImageTitleText top={30}>
+                      ></S.RightSideImage_img>
+                      <S.ImageTitleText top={30}>
                         {trust.titleText}
-                      </ImageTitleText>
-                      <ImageContent top={50}>"{trust.content}"</ImageContent>
-                    </ImageContainer>
+                      </S.ImageTitleText>
+                      <S.ImageContent top={50}>
+                        "{trust.content}"
+                      </S.ImageContent>
+                    </S.ImageContainer>
                   </>
                 ))}
-            </RightSide_div>
-          </OuterWrap_section>
+            </S.RightSide_div>
+          </S.OuterWrap_section>
         </>
       )}
     </>

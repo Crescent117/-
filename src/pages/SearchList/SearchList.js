@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const searchListCss_1 = require("../../components/SearchList/searchListCss");
-const existSearchStoreList_1 = __importDefault(require("../../components/SearchList/existSearchStoreList"));
+const existSearchStoreList_1 = __importDefault(require("../../components/SearchList/ExistSearchStoreList/existSearchStoreList"));
 const react_1 = __importStar(require("react"));
 const react_router_dom_1 = require("react-router-dom");
 const SearchList = () => {
