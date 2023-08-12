@@ -28,7 +28,7 @@ exports.Module_more = styled_components_1.default.p `
   line-height:30px
 `;
 exports.ImageWrapper = styled_components_1.default.div `
-   width: 100%;
+  width: 100%;
   height: ${({ height }) => `${height}px`};
   overflow: hidden;
   display: grid;

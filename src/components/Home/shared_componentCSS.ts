@@ -34,7 +34,7 @@ type ImageWrapperProps = {
 
 
 export const ImageWrapper = styled.div<ImageWrapperProps>`
-   width: 100%;
+  width: 100%;
   height: ${({ height }) => `${height}px`};
   overflow: hidden;
   display: grid;
