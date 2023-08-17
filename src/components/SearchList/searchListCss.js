@@ -52,6 +52,7 @@ exports.SearchList_li = styled_components_1.default.li `
   margin-left: 10px;
   margin-right: 10px;
   display: inline-block;
+  margin-bottom:10px;
 `;
 exports.FoodImg_img = styled_components_1.default.img `
   width: 359px;

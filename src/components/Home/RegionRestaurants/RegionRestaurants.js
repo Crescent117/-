@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
-const shared_componentCSS_1 = require("../shared_componentCSS");
+const S = __importStar(require("../shared_componentCSS"));
 const regionFoodBest = [
     {
         src: "https://a.cdn-hotels.com/gdcs/production188/d1750/2255e427-d720-43e2-ae85-6a6719fafc03.jpg?impolicy=fcrop&w=800&h=533&q=medium",
@@ -74,23 +74,23 @@ const RegionRestaurants = ({ columns, itemsPerPage, }) => {
         setUseRegionSlide(useRegionSlide - 1);
     };
     return (react_1.default.createElement("section", null,
-        react_1.default.createElement(shared_componentCSS_1.Module_title_wrap, null,
-            react_1.default.createElement(shared_componentCSS_1.Module_title_name, null, "\uC9C0\uC5ED\uBCC4 \uC778\uAE30 \uB9DB\uC9D1"),
-            react_1.default.createElement(shared_componentCSS_1.Module_more, null, "\uC2A4\uD1A0\uB9AC \uB354\uBCF4\uAE30")),
-        react_1.default.createElement(shared_componentCSS_1.SliderContainer, { style: {
+        react_1.default.createElement(S.Module_title_wrap, null,
+            react_1.default.createElement(S.Module_title_name, null, "\uC9C0\uC5ED\uBCC4 \uC778\uAE30 \uB9DB\uC9D1"),
+            react_1.default.createElement(S.Module_more, null, "\uC2A4\uD1A0\uB9AC \uB354\uBCF4\uAE30")),
+        react_1.default.createElement(S.SliderContainer, { style: {
                 marginLeft: columns !== 2 ? 80 : 0,
                 marginRight: columns !== 2 ? 80 : 0,
             } },
-            columns === 2 && (react_1.default.createElement(shared_componentCSS_1.SlideButton, { onClick: clickRegionSlideLeft, style: { marginRight: 10 } }, "<")),
-            react_1.default.createElement(shared_componentCSS_1.ImageWrapper, { columns: columns, rows: 2, height: 492 },
+            columns === 2 && (react_1.default.createElement(S.SlideButton, { onClick: clickRegionSlideLeft, style: { marginRight: 10 } }, "<")),
+            react_1.default.createElement(S.ImageWrapper, { columns: columns, rows: 2, height: 492 },
                 react_1.default.createElement(react_1.default.Fragment, null, regionFoodBest
                     .slice((useRegionSlide % numberOfGroupsRegion) * (itemsPerPage - 2), (useRegionSlide % numberOfGroupsRegion) * (itemsPerPage - 2) +
                     itemsPerPage)
-                    .map((image, index) => (react_1.default.createElement(shared_componentCSS_1.ImageContainer, { key: index, onDragStart: (e) => e.preventDefault(), height: 236 },
-                    react_1.default.createElement(shared_componentCSS_1.Image_list, { src: image.src, alt: image.alt, height: 236 }),
-                    react_1.default.createElement(shared_componentCSS_1.ImageTitleText, { top: 30 }, image.titleText),
-                    react_1.default.createElement(shared_componentCSS_1.ImageContent, { top: 60 }, image.content)))))),
-            columns === 2 && (react_1.default.createElement(shared_componentCSS_1.SlideButton, { onClick: clickRegionSlideRight, style: { marginLeft: 10 } }, ">")))));
+                    .map((image, index) => (react_1.default.createElement(S.ImageContainer, { key: index, onDragStart: (e) => e.preventDefault(), height: 236 },
+                    react_1.default.createElement(S.Image_list, { src: image.src, alt: image.alt, height: 236 }),
+                    react_1.default.createElement(S.ImageTitleText, { top: 30 }, image.titleText),
+                    react_1.default.createElement(S.ImageContent, { top: 60 }, image.content)))))),
+            columns === 2 && (react_1.default.createElement(S.SlideButton, { onClick: clickRegionSlideRight, style: { marginLeft: 10 } }, ">")))));
 };
 exports.default = RegionRestaurants;
 //# sourceMappingURL=regionRestaurants.js.map

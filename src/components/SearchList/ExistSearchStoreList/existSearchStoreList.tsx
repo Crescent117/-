@@ -16,16 +16,16 @@ interface SearchListDB {
 interface SearchStoreListProps {
   setUseSearchNotFoundMessage: React.Dispatch<React.SetStateAction<string>>;
   setUseSearchNotFound: React.Dispatch<React.SetStateAction<boolean>>;
+  searchValue: string | undefined;
 }
 
 const existSearchStoreList = ({
   setUseSearchNotFoundMessage,
   setUseSearchNotFound,
+  searchValue,
 }: SearchStoreListProps) => {
-
   // 상태 관리
   const [useSearchList, setUseSearchList] = useState<SearchListDB[]>([]);
-  const { searchValue } = useParams();
   const [useTotalPage, setUsrTotalPage] = useState<number>(0);
   const [usePageNum, setUsePageNum] = useState<number>(0);
   // 현재 페이지 정보
@@ -36,28 +36,19 @@ const existSearchStoreList = ({
     getSearchList();
   }, []);
 
-
   // pageNumCheck
-  const pagenumCheck = (pageNum:number) => {
+  const pagenumCheck = () => {
     // 주소값에서 가져옴 페이지 처음들어왔을땐 null
     const pageNumParams = searchParams.get("pagenum");
-
-    if (pageNumParams == null) {
-      pageNum = 1;
-    } else {
-      pageNum = parseInt(pageNumParams);
-    }
-    setUsePageNum(pageNum);
-
-    return pageNum
-  }
+    return pageNumParams == null ? 1 : parseInt(pageNumParams);
+  };
 
   //검색리스트 가져오기
   const getSearchList = async () => {
     // 현재 페이지 정보
-    let pageNum: number;
-    pageNum = -1;
-    pageNum = pagenumCheck(pageNum);
+    let pageNum = -1;
+    pageNum = pagenumCheck();
+    setUsePageNum(pageNum);
 
     //통신
     try {
@@ -74,13 +65,18 @@ const existSearchStoreList = ({
         console.log(`${statusCode} - ${statusText} - ${message}`);
         return;
       }
+
+      // 받아온 데이터
       const data = await response.json();
+
+      // 검색한 데이터의 값이 없을 시 체크
       if (data.message) {
         console.log(data);
         console.log(response);
         setUseSearchNotFound(true);
         setUseSearchNotFoundMessage(data.message);
       }
+
       // 가게 정보들
       setUseSearchList(data[1]);
 
@@ -91,60 +87,43 @@ const existSearchStoreList = ({
     }
   };
 
+  const renderStoreInfo = (store: SearchListDB, index: number) => {
+    return (
+      <S.SearchList_li key={index}>
+        <S.FoodImg_img height={239} src={store.imgurl} />
+        <br />
+        <S.StoreTitleScoreWrap>
+          <StyleSheetManager shouldForwardProp={(prop) => prop !== "maxChar"}>
+            <S.StoreTitle maxchar={20}>{store.storename}</S.StoreTitle>
+            <S.StoreScore>{store.pointAVG}</S.StoreScore>
+          </StyleSheetManager>
+        </S.StoreTitleScoreWrap>
+        <div>
+          {store.storeLocation} - {store.storeRecommendFood}
+        </div>
+        <S.ViewCount> {store.visit}</S.ViewCount>
+      </S.SearchList_li>
+    );
+  };
 
+  const renderSearchResults = () => {
+    return useSearchList.map(renderStoreInfo);
+  };
 
   return (
-    <>
-      <S.SearchListWrap_div>
-        <S.SearchListInner_div>
-          <S.SearchListTitle_title>
-            {searchValue} 맛집 인기 검색순위
-          </S.SearchListTitle_title>
-          {/*데이터의 2분의 1만큼 for문 */}
-          {/*ul 하나당 li 2개*/}
-          {Array.from({ length: useSearchList.length / 2 }).map(
-            (_, ulIndex) => (
-              <S.SertchList_ul key={ulIndex}>
-                {/* 안쪽 배열 */ }
-                {useSearchList.map((store, index) => {
-                  if (index >= ulIndex * 2 && index < (ulIndex + 1) * 2) {
-                    return (
-                      <S.SearchList_li key={index}>
-                        <S.FoodImg_img height={239} src={store.imgurl} />
-                        <br />
-                        {/*가게타이틀 평점 */}
-                        <S.StoreTitleScoreWrap>
-                          <StyleSheetManager
-                            shouldForwardProp={(prop) => prop !== "maxChar"}
-                          >
-                            {/* 가게 이름 */}
-                            <S.StoreTitle maxchar={20}>
-                              {store.storename}
-                            </S.StoreTitle>
-                            {/* 가게 평점 */}
-                            <S.StoreScore>{store.pointAVG}</S.StoreScore>
-                          </StyleSheetManager>
-                        </S.StoreTitleScoreWrap>
-                        <div>
-                          {store.storeLocation} - {store.storeRecommendFood}
-                        </div>
-                        <S.ViewCount> {store.visit}</S.ViewCount>
-                      </S.SearchList_li>
-                    );
-                  }
-                  return null;
-                })}
-              </S.SertchList_ul>
-            )
-          )}
-        </S.SearchListInner_div>
-        <SearchListPagenation
-          useTotalPage={useTotalPage}
-          usePageNum={usePageNum}
-          searchValue={searchValue}
-        />
-      </S.SearchListWrap_div>
-    </>
+    <S.SearchListWrap_div>
+      <S.SearchListInner_div>
+        <S.SearchListTitle_title>
+          {searchValue} 맛집 인기 검색순위
+        </S.SearchListTitle_title>
+        {renderSearchResults()}
+      </S.SearchListInner_div>
+      <SearchListPagenation
+        useTotalPage={useTotalPage}
+        usePageNum={usePageNum}
+        searchValue={searchValue}
+      />
+    </S.SearchListWrap_div>
   );
 };
 

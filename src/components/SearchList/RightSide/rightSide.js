@@ -33,20 +33,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
-const S = __importStar(require("../shared_componentCSS"));
-const PopularRestaurants = ({ itemsPerPage, columns, }) => {
-    const [usePopularSlide, setUsePopularSlide] = (0, react_1.useState)(0);
-    const [useTrustBestData, setUseTrustBestData] = (0, react_1.useState)([]);
-    const numberOfGroups = useTrustBestData
-        ? Math.ceil(useTrustBestData.length / itemsPerPage)
-        : 0;
+const S = __importStar(require("../searchListCss"));
+// searchList의 오른쪽 부분
+const RightSide = () => {
+    const [useTrustBest, setUseTrustBest] = (0, react_1.useState)([]);
     (0, react_1.useEffect)(() => {
         getTrustBest();
     }, []);
-    //MogoDB 통신
     const getTrustBest = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const response = yield fetch("http://localhost:4500/trustBest");
+            const response = yield fetch(`http://localhost:4500/trustBest`);
+            // 에러처리
             if (!response.ok) {
                 const errorData = yield response.json();
                 const statusCode = response.status;
@@ -56,39 +53,24 @@ const PopularRestaurants = ({ itemsPerPage, columns, }) => {
                 return;
             }
             const data = yield response.json();
-            setUseTrustBestData(data);
+            setUseTrustBest(data);
         }
         catch (err) {
             console.log("error log: ", err);
         }
     });
-    const clickSlideRight = () => {
-        setUsePopularSlide(usePopularSlide + 1);
-    };
-    const clickSlideLeft = () => {
-        setUsePopularSlide(usePopularSlide - 1);
-    };
-    const moveTopList = (url) => {
-        window.location.href = url;
-    };
-    return (react_1.default.createElement(react_1.default.Fragment, null, useTrustBestData && (react_1.default.createElement("section", null,
-        react_1.default.createElement(S.Module_title_wrap, null,
-            react_1.default.createElement(S.Module_title_name, null, "\uBBFF\uACE0 \uBCF4\uB294 \uB9DB\uC9D1 \uB9AC\uC2A4\uD2B8"),
-            react_1.default.createElement(S.Module_more, null, "\uB9AC\uC2A4\uD2B8 \uB354\uBCF4\uAE30")),
-        react_1.default.createElement(S.SliderContainer, null,
-            react_1.default.createElement(S.SlideButton, { onClick: clickSlideLeft, style: { marginRight: 10 } }, "<"),
-            react_1.default.createElement(S.ImageWrapper, { columns: columns, rows: 2, height: 492 },
-                react_1.default.createElement(react_1.default.Fragment, null, useTrustBestData
-                    .slice((usePopularSlide % numberOfGroups) * itemsPerPage, (usePopularSlide % numberOfGroups) * itemsPerPage +
-                    itemsPerPage)
-                    .map((image, index) => (react_1.default.createElement(S.ImageContainer, { key: index, onDragStart: (e) => e.preventDefault(), height: 236, onClick: () => moveTopList(image.url) },
-                    react_1.default.createElement(S.Image_list, { src: image.src, alt: image.alt, height: 236 }),
-                    react_1.default.createElement(S.ImageTitleText, { top: 30 }, image.titleText),
+    return (react_1.default.createElement(S.RightSide_div, null,
+        react_1.default.createElement(S.Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
+        react_1.default.createElement(S.SearchListTitle_title, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
+        useTrustBest &&
+            useTrustBest.map((trust, index) => (react_1.default.createElement(react_1.default.Fragment, null,
+                react_1.default.createElement(S.ImageContainer, { height: 165 },
+                    react_1.default.createElement(S.RightSideImage_img, { key: index, src: trust.src }),
+                    react_1.default.createElement(S.ImageTitleText, { top: 30 }, trust.titleText),
                     react_1.default.createElement(S.ImageContent, { top: 50 },
                         "\"",
-                        image.content,
-                        "\"")))))),
-            react_1.default.createElement(S.SlideButton, { onClick: clickSlideRight, style: { marginLeft: 10 } }, ">"))))));
+                        trust.content,
+                        "\"")))))));
 };
-exports.default = PopularRestaurants;
-//# sourceMappingURL=popularRestaurants.js.map
+exports.default = RightSide;
+//# sourceMappingURL=rightSide.js.map

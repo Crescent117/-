@@ -38,12 +38,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
 const react_router_dom_1 = require("react-router-dom");
 const styled_components_1 = require("styled-components");
-const searchListCss_1 = require("../searchListCss");
+const S = __importStar(require("../searchListCss"));
 const pagenation_1 = __importDefault(require("../Pagenation/pagenation"));
-const existSearchStoreList = ({ setUseSearchNotFoundMessage, setUseSearchNotFound, }) => {
+const existSearchStoreList = ({ setUseSearchNotFoundMessage, setUseSearchNotFound, searchValue, }) => {
     // 상태 관리
     const [useSearchList, setUseSearchList] = (0, react_1.useState)([]);
-    const { searchValue } = (0, react_router_dom_1.useParams)();
     const [useTotalPage, setUsrTotalPage] = (0, react_1.useState)(0);
     const [usePageNum, setUsePageNum] = (0, react_1.useState)(0);
     // 현재 페이지 정보
@@ -53,24 +52,17 @@ const existSearchStoreList = ({ setUseSearchNotFoundMessage, setUseSearchNotFoun
         getSearchList();
     }, []);
     // pageNumCheck
-    const pagenumCheck = (pageNum) => {
+    const pagenumCheck = () => {
         // 주소값에서 가져옴 페이지 처음들어왔을땐 null
         const pageNumParams = searchParams.get("pagenum");
-        if (pageNumParams == null) {
-            pageNum = 1;
-        }
-        else {
-            pageNum = parseInt(pageNumParams);
-        }
-        setUsePageNum(pageNum);
-        return pageNum;
+        return pageNumParams == null ? 1 : parseInt(pageNumParams);
     };
     //검색리스트 가져오기
     const getSearchList = () => __awaiter(void 0, void 0, void 0, function* () {
         // 현재 페이지 정보
-        let pageNum;
-        pageNum = -1;
-        pageNum = pagenumCheck(pageNum);
+        let pageNum = -1;
+        pageNum = pagenumCheck();
+        setUsePageNum(pageNum);
         //통신
         try {
             const response = yield fetch(`http://localhost:4500/getSearchList/${searchValue}?pageNum=${pageNum}`);
@@ -83,7 +75,9 @@ const existSearchStoreList = ({ setUseSearchNotFoundMessage, setUseSearchNotFoun
                 console.log(`${statusCode} - ${statusText} - ${message}`);
                 return;
             }
+            // 받아온 데이터
             const data = yield response.json();
+            // 검색한 데이터의 값이 없을 시 체크
             if (data.message) {
                 console.log(data);
                 console.log(response);
@@ -99,32 +93,32 @@ const existSearchStoreList = ({ setUseSearchNotFoundMessage, setUseSearchNotFoun
             console.log("error log: ", err);
         }
     });
-    return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement(searchListCss_1.SearchListWrap_div, null,
-            react_1.default.createElement(searchListCss_1.SearchListInner_div, null,
-                react_1.default.createElement(searchListCss_1.SearchListTitle_title, null,
-                    searchValue,
-                    " \uB9DB\uC9D1 \uC778\uAE30 \uAC80\uC0C9\uC21C\uC704"),
-                Array.from({ length: useSearchList.length / 2 }).map((_, ulIndex) => (react_1.default.createElement(searchListCss_1.SertchList_ul, { key: ulIndex }, useSearchList.map((store, index) => {
-                    if (index >= ulIndex * 2 && index < (ulIndex + 1) * 2) {
-                        return (react_1.default.createElement(searchListCss_1.SearchList_li, { key: index },
-                            react_1.default.createElement(searchListCss_1.FoodImg_img, { height: 239, src: store.imgurl }),
-                            react_1.default.createElement("br", null),
-                            react_1.default.createElement(searchListCss_1.StoreTitleScoreWrap, null,
-                                react_1.default.createElement(styled_components_1.StyleSheetManager, { shouldForwardProp: (prop) => prop !== "maxChar" },
-                                    react_1.default.createElement(searchListCss_1.StoreTitle, { maxchar: 20 }, store.storename),
-                                    react_1.default.createElement(searchListCss_1.StoreScore, null, store.pointAVG))),
-                            react_1.default.createElement("div", null,
-                                store.storeLocation,
-                                " - ",
-                                store.storeRecommendFood),
-                            react_1.default.createElement(searchListCss_1.ViewCount, null,
-                                " ",
-                                store.visit)));
-                    }
-                    return null;
-                }))))),
-            react_1.default.createElement(pagenation_1.default, { useTotalPage: useTotalPage, usePageNum: usePageNum, searchValue: searchValue }))));
+    const renderStoreInfo = (store, index) => {
+        return (react_1.default.createElement(S.SearchList_li, { key: index },
+            react_1.default.createElement(S.FoodImg_img, { height: 239, src: store.imgurl }),
+            react_1.default.createElement("br", null),
+            react_1.default.createElement(S.StoreTitleScoreWrap, null,
+                react_1.default.createElement(styled_components_1.StyleSheetManager, { shouldForwardProp: (prop) => prop !== "maxChar" },
+                    react_1.default.createElement(S.StoreTitle, { maxchar: 20 }, store.storename),
+                    react_1.default.createElement(S.StoreScore, null, store.pointAVG))),
+            react_1.default.createElement("div", null,
+                store.storeLocation,
+                " - ",
+                store.storeRecommendFood),
+            react_1.default.createElement(S.ViewCount, null,
+                " ",
+                store.visit)));
+    };
+    const renderSearchResults = () => {
+        return useSearchList.map(renderStoreInfo);
+    };
+    return (react_1.default.createElement(S.SearchListWrap_div, null,
+        react_1.default.createElement(S.SearchListInner_div, null,
+            react_1.default.createElement(S.SearchListTitle_title, null,
+                searchValue,
+                " \uB9DB\uC9D1 \uC778\uAE30 \uAC80\uC0C9\uC21C\uC704"),
+            renderSearchResults()),
+        react_1.default.createElement(pagenation_1.default, { useTotalPage: useTotalPage, usePageNum: usePageNum, searchValue: searchValue })));
 };
 exports.default = existSearchStoreList;
 //# sourceMappingURL=existSearchStoreList.js.map

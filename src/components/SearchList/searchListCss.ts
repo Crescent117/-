@@ -52,6 +52,7 @@ export const SearchList_li = styled.li`
   margin-left: 10px;
   margin-right: 10px;
   display: inline-block;
+  margin-bottom:10px;
 `;
 
 export const FoodImg_img = styled.img<FoodImg_size>`

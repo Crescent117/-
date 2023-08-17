@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
-const homeBannerCSS_1 = require("./homeBannerCSS");
+const S = __importStar(require("./homeBannerCSS"));
 const Banner = () => {
     const [searchValue, setSearchValue] = (0, react_1.useState)("");
     const searchListGo = () => {
@@ -49,17 +49,17 @@ const Banner = () => {
     };
     const popupSearch = () => {
     };
-    return (react_1.default.createElement(homeBannerCSS_1.HomeBanner, null,
-        react_1.default.createElement(homeBannerCSS_1.HomeBannerText, null,
+    return (react_1.default.createElement(S.HomeBanner, null,
+        react_1.default.createElement(S.HomeBannerText, null,
             "\uC194\uC9C1\uD55C \uB9AC\uBDF0, \uBBFF\uC744 \uC218 \uC788\uB294 \uD3C9\uC810!",
             react_1.default.createElement("br", null),
             "\uB354 \uC870\uC740 \uB9DB\uC9D1 \uB9AC\uC2A4\uD2B8!"),
-        react_1.default.createElement(homeBannerCSS_1.HomeBannerSearchWrap, null,
-            react_1.default.createElement(homeBannerCSS_1.HomeBannerLabel, null,
+        react_1.default.createElement(S.HomeBannerSearchWrap, null,
+            react_1.default.createElement(S.HomeBannerLabel, null,
                 react_1.default.createElement("span", null,
-                    react_1.default.createElement(homeBannerCSS_1.HomeBannerSearchIcon, { src: "https://w7.pngwing.com/pngs/410/185/png-transparent-magnifying-glass-computer-icons-magnifying-glass-glass-art-symbol-thumbnail.png" })),
-                react_1.default.createElement(homeBannerCSS_1.HomeBannerInput, { id: "searchValue", type: "text", placeholder: "\uC9C0\uC5ED, \uC2DD\uB2F9 \uB610\uB294 \uC74C\uC2DD", value: searchValue, onChange: (e) => setSearchValue(e.target.value), onKeyDown: enterKeyDown, onClick: popupSearch }),
-                react_1.default.createElement(homeBannerCSS_1.HomeBannerButton, { type: "button", value: "\uAC80\uC0C9", onClick: searchListGo })))));
+                    react_1.default.createElement(S.HomeBannerSearchIcon, { src: "https://w7.pngwing.com/pngs/410/185/png-transparent-magnifying-glass-computer-icons-magnifying-glass-glass-art-symbol-thumbnail.png" })),
+                react_1.default.createElement(S.HomeBannerInput, { id: "searchValue", type: "text", placeholder: "\uC9C0\uC5ED, \uC2DD\uB2F9 \uB610\uB294 \uC74C\uC2DD", value: searchValue, onChange: (e) => setSearchValue(e.target.value), onKeyDown: enterKeyDown, onClick: popupSearch }),
+                react_1.default.createElement(S.HomeBannerButton, { type: "button", value: "\uAC80\uC0C9", onClick: searchListGo })))));
 };
 exports.default = Banner;
 //# sourceMappingURL=banner.js.map
