@@ -41,12 +41,14 @@ const RightSide = () => {
     
     return (
       <S.RightSide_div>
-        <S.Map_div>지도 공간</S.Map_div>
+        <S.Map_div>
+          지도 공간
+        </S.Map_div>
         <S.SearchListTitle_title> 관련 콘텐츠 </S.SearchListTitle_title>
         {useTrustBest &&
           useTrustBest.map((trust, index) => (
             <>
-              <S.ImageContainer height={165}>
+              <S.ImageContainer height={165} key={ index }>
                 <S.RightSideImage_img
                   key={index}
                   src={trust.src}

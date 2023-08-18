@@ -22,34 +22,29 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
+const react_redux_1 = require("react-redux");
 const react_router_dom_1 = require("react-router-dom");
+const redux_1 = require("redux");
 const styled_components_1 = require("styled-components");
-const S = __importStar(require("../searchListCss"));
+const actions_1 = require("../../../redux/SearchList/actions");
 const pagenation_1 = __importDefault(require("../Pagenation/pagenation"));
-const existSearchStoreList = ({ setUseSearchNotFoundMessage, setUseSearchNotFound, searchValue, }) => {
-    // 상태 관리
-    const [useSearchList, setUseSearchList] = (0, react_1.useState)([]);
-    const [useTotalPage, setUsrTotalPage] = (0, react_1.useState)(0);
-    const [usePageNum, setUsePageNum] = (0, react_1.useState)(0);
-    // 현재 페이지 정보
+const S = __importStar(require("../searchListCss"));
+const existSearchStoreList = ({ useSearchNotFound, useSearchNotFoundMessage, useSearchList, getSearchList, useTotalPage, usePageNum, }) => {
+    // 검색키워드
+    const { searchValue } = (0, react_router_dom_1.useParams)();
+    // 현재 PageNum 추출
     const location = (0, react_router_dom_1.useLocation)();
     const searchParams = new URLSearchParams(location.search);
     (0, react_1.useEffect)(() => {
-        getSearchList();
+        const pageNum = pagenumCheck();
+        if (searchValue !== undefined) {
+            getSearchList(searchValue, pageNum);
+        }
     }, []);
     // pageNumCheck
     const pagenumCheck = () => {
@@ -57,68 +52,50 @@ const existSearchStoreList = ({ setUseSearchNotFoundMessage, setUseSearchNotFoun
         const pageNumParams = searchParams.get("pagenum");
         return pageNumParams == null ? 1 : parseInt(pageNumParams);
     };
-    //검색리스트 가져오기
-    const getSearchList = () => __awaiter(void 0, void 0, void 0, function* () {
-        // 현재 페이지 정보
-        let pageNum = -1;
-        pageNum = pagenumCheck();
-        setUsePageNum(pageNum);
-        //통신
-        try {
-            const response = yield fetch(`http://localhost:4500/getSearchList/${searchValue}?pageNum=${pageNum}`);
-            // 에러처리
-            if (!response.ok) {
-                const errorData = yield response.json();
-                const statusCode = response.status;
-                const statusText = response.statusText;
-                const message = errorData.message[0];
-                console.log(`${statusCode} - ${statusText} - ${message}`);
-                return;
-            }
-            // 받아온 데이터
-            const data = yield response.json();
-            // 검색한 데이터의 값이 없을 시 체크
-            if (data.message) {
-                console.log(data);
-                console.log(response);
-                setUseSearchNotFound(true);
-                setUseSearchNotFoundMessage(data.message);
-            }
-            // 가게 정보들
-            setUseSearchList(data[1]);
-            // 페이징 함수
-            setUsrTotalPage(data[0].totalPage);
-        }
-        catch (err) {
-            console.log("error log: ", err);
-        }
-    });
-    const renderStoreInfo = (store, index) => {
+    // DB에서 검색해온 맛집데이터 반복문
+    const renderStoreInfo = (storeInfo, index) => {
         return (react_1.default.createElement(S.SearchList_li, { key: index },
-            react_1.default.createElement(S.FoodImg_img, { height: 239, src: store.imgurl }),
+            react_1.default.createElement(S.FoodImg_img, { height: 239, src: storeInfo.imgurl }),
             react_1.default.createElement("br", null),
             react_1.default.createElement(S.StoreTitleScoreWrap, null,
                 react_1.default.createElement(styled_components_1.StyleSheetManager, { shouldForwardProp: (prop) => prop !== "maxChar" },
-                    react_1.default.createElement(S.StoreTitle, { maxchar: 20 }, store.storename),
-                    react_1.default.createElement(S.StoreScore, null, store.pointAVG))),
+                    react_1.default.createElement(S.StoreTitle, { maxchar: 20 }, storeInfo.storename),
+                    react_1.default.createElement(S.StoreScore, null, storeInfo.pointAVG))),
             react_1.default.createElement("div", null,
-                store.storeLocation,
+                storeInfo.storeLocation,
                 " - ",
-                store.storeRecommendFood),
+                storeInfo.storeRecommendFood),
             react_1.default.createElement(S.ViewCount, null,
                 " ",
-                store.visit)));
+                storeInfo.visit)));
     };
+    // 최종적으로 리턴할 값
     const renderSearchResults = () => {
         return useSearchList.map(renderStoreInfo);
     };
-    return (react_1.default.createElement(S.SearchListWrap_div, null,
+    return (react_1.default.createElement(S.SearchListWrap_div, null, !useSearchNotFound && useSearchList ? (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement(S.SearchListInner_div, null,
             react_1.default.createElement(S.SearchListTitle_title, null,
                 searchValue,
                 " \uB9DB\uC9D1 \uC778\uAE30 \uAC80\uC0C9\uC21C\uC704"),
             renderSearchResults()),
-        react_1.default.createElement(pagenation_1.default, { useTotalPage: useTotalPage, usePageNum: usePageNum, searchValue: searchValue })));
+        react_1.default.createElement(pagenation_1.default, { useTotalPage: useTotalPage, usePageNum: usePageNum, searchValue: searchValue }))) : (react_1.default.createElement(S.ErrorMessage, null, useSearchNotFoundMessage))));
 };
-exports.default = existSearchStoreList;
+// mapStateToProps 함수 정의
+const mapStateToProps = (state) => ({
+    useSearchList: state.searchList.useSearchList,
+    useTotalPage: state.searchList.useTotalPage,
+    usePageNum: state.searchList.usePageNum,
+    useSearchNotFound: state.searchList.useSearchNotFound,
+    useSearchNotFoundMessage: state.searchList.useSearchNotFoundMessage,
+});
+// mapDispatchToProps 함수 정의
+const mapDispatchToProps = (dispatch) => (0, redux_1.bindActionCreators)({
+    getSearchList: actions_1.getSearchList,
+    setTotalPage: actions_1.setTotalPage,
+    setPageNum: actions_1.setPageNum,
+}, dispatch);
+// connect를 사용하여 컴포넌트와 Redux 연결
+const ExistSearchStoreList = (0, react_redux_1.connect)(mapStateToProps, mapDispatchToProps)(existSearchStoreList);
+exports.default = ExistSearchStoreList;
 //# sourceMappingURL=existSearchStoreList.js.map

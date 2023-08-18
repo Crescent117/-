@@ -64,7 +64,7 @@ const RightSide = () => {
         react_1.default.createElement(S.SearchListTitle_title, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
         useTrustBest &&
             useTrustBest.map((trust, index) => (react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement(S.ImageContainer, { height: 165 },
+                react_1.default.createElement(S.ImageContainer, { height: 165, key: index },
                     react_1.default.createElement(S.RightSideImage_img, { key: index, src: trust.src }),
                     react_1.default.createElement(S.ImageTitleText, { top: 30 }, trust.titleText),
                     react_1.default.createElement(S.ImageContent, { top: 50 },

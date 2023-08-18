@@ -22,19 +22,30 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importDefault(require("react"));
-const existSearchStoreList_1 = __importDefault(require("../../components/SearchList/ExistSearchStoreList/existSearchStoreList"));
-const rightSide_1 = __importDefault(require("../../components/SearchList/RightSide/rightSide"));
-const S = __importStar(require("../../components/SearchList/searchListCss"));
-const SearchList = () => {
-    return (react_1.default.createElement(react_1.default.Fragment, null,
-        react_1.default.createElement(S.OuterWrap_section, null,
-            react_1.default.createElement(existSearchStoreList_1.default, null),
-            react_1.default.createElement(rightSide_1.default, null))));
+const types = __importStar(require("./types"));
+const initialState = {
+    useSearchList: [],
+    useTotalPage: 0,
+    usePageNum: 0,
+    useSearchNotFound: false,
+    useSearchNotFoundMessage: "",
 };
-exports.default = SearchList;
-//# sourceMappingURL=searchList.js.map
+const searchListReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case types.SET_SEARCH_LIST:
+            return Object.assign(Object.assign({}, state), { useSearchList: action.payload });
+        case types.SET_TOTAL_PAGE:
+            return Object.assign(Object.assign({}, state), { useTotalPage: action.payload });
+        case types.SET_PAGE_NUM:
+            return Object.assign(Object.assign({}, state), { usePageNum: action.payload });
+        case types.SET_SEARCH_NOT_FOUND:
+            return Object.assign(Object.assign({}, state), { useSearchNotFound: action.payload });
+        case types.SET_SEARCH_NOT_FOUND_MESSAGE:
+            return Object.assign(Object.assign({}, state), { useSearchNotFoundMessage: action.payload });
+        default:
+            return state;
+    }
+};
+exports.default = searchListReducer;
+//# sourceMappingURL=reducer.js.map
