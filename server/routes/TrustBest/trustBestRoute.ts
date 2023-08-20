@@ -1,7 +1,7 @@
-const trustBestExpress = require("express");
-const trustBestRouter = trustBestExpress.Router();
-const TrustBestController = require("../../Controllers/TrustBest/trustBestController");
+import express from "express";
+const trustBestRouter = express.Router();
+import { getTrustBest } from "../../Controllers/TrustBest/trustBestController";
 
-trustBestRouter.get("/trustBest", TrustBestController.getTrustBest);
+trustBestRouter.get("/trustBest", getTrustBest);
 
-module.exports = trustBestRouter;
+export default trustBestRouter;

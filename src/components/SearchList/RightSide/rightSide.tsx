@@ -1,66 +1,55 @@
-import React, { useEffect, useState } from "react"
-import * as S from '../searchListCss'
-
-
-interface TrustBest {
-  src: string;
-  titleText: string;
-  content: string;
-}
+import { getTrustBest } from "../../../redux/TrustBest/actions";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { Dispatch, bindActionCreators } from "redux";
+import { RootState } from "../../../redux/store";
+import * as S from '../searchListCss';
 
 // searchList의 오른쪽 부분
-const RightSide = () => { 
-  const [useTrustBest, setUseTrustBest] = useState<TrustBest[]>([]);
+const rightSide = ({
+  getTrustBest,
+  useTrustBest,
+}: ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>) => {
+  useEffect(() => {
+    getTrustBest();
+  }, []);
 
-    
-    useEffect(() => {
-      getTrustBest();
-    }, []);
+  return (
+    <S.RightSide_div>
+      <S.Map_div>지도 공간</S.Map_div>
+      <S.SearchListTitle_title> 관련 콘텐츠 </S.SearchListTitle_title>
+      {useTrustBest &&
+        useTrustBest.map((trust, index) => (
+          <>
+            <S.ImageContainer height={165} key={index}>
+              <S.RightSideImage_img
+                key={index}
+                src={trust.src}
+              ></S.RightSideImage_img>
+              <S.ImageTitleText top={30}>{trust.titleText}</S.ImageTitleText>
+              <S.ImageContent top={50}>"{trust.content}"</S.ImageContent>
+            </S.ImageContainer>
+          </>
+        ))}
+    </S.RightSide_div>
+  );
+};
 
-    const getTrustBest = async () => {
-      try {
-        const response = await fetch(`http://localhost:4500/trustBest`);
+const mapStateToProps = (state: RootState) => ({
+  useTrustBest: state.trustBest.useTrustBest,
+});
 
-        // 에러처리
-        if (!response.ok) {
-          const errorData = await response.json();
-          const statusCode = response.status;
-          const statusText = response.statusText;
-          const message = errorData.message[0];
-          console.log(`${statusCode} - ${statusText} - ${message}`);
-          return;
-        }
+// mapDispatchToProps 함수 정의
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      getTrustBest,
+    },
+    dispatch
+  );
 
-        const data = await response.json();
-        setUseTrustBest(data);
-      } catch (err) {
-        console.log("error log: ", err);
-      }
-    };
-
-    
-    return (
-      <S.RightSide_div>
-        <S.Map_div>
-          지도 공간
-        </S.Map_div>
-        <S.SearchListTitle_title> 관련 콘텐츠 </S.SearchListTitle_title>
-        {useTrustBest &&
-          useTrustBest.map((trust, index) => (
-            <>
-              <S.ImageContainer height={165} key={ index }>
-                <S.RightSideImage_img
-                  key={index}
-                  src={trust.src}
-                ></S.RightSideImage_img>
-                <S.ImageTitleText top={30}>{trust.titleText}</S.ImageTitleText>
-                <S.ImageContent top={50}>"{trust.content}"</S.ImageContent>
-              </S.ImageContainer>
-            </>
-          ))}
-      </S.RightSide_div>
-    )
-
-}
+// connect를 사용하여 컴포넌트와 Redux 연결
+const RightSide = connect(mapStateToProps, mapDispatchToProps)(rightSide);
 
 export default RightSide;

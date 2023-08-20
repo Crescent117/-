@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getSearchList = void 0;
 const searchList_1 = __importDefault(require("../../Model/SearchList/searchList"));
 //쿼리문 불러오기
 // 댓글 평점 평균 계산
@@ -41,7 +42,7 @@ const processStoreInfo = (param) => {
         favorite: storeInfo.basicInfo.favorite,
     };
 };
-exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const keyword = req.params.keyword;
     const pageNum = Number(req.query.pageNum) - 1 || 0;
@@ -183,4 +184,5 @@ exports.getSearchList = (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.status(500).json({ message: "Internal Server Error" });
     }
 });
+exports.getSearchList = getSearchList;
 //# sourceMappingURL=searchListController.js.map

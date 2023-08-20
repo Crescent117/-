@@ -1,7 +1,8 @@
-const searchExpress = require("express");
-const searchRouter = searchExpress.Router();
-const searchListController = require("../../Controllers/SearchList/searchListController");
+import express from "express";
+const searchRouter = express.Router();
+import { getSearchList } from "../../Controllers/SearchList/searchListController";
 
-searchRouter.get("/getSearchList/:keyword", searchListController.getSearchList);
 
-module.exports = searchRouter;
+searchRouter.get("/getSearchList/:keyword", getSearchList);
+
+export default searchRouter;

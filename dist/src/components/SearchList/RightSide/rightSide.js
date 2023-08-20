@@ -22,43 +22,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const actions_1 = require("../../../redux/TrustBest/actions");
 const react_1 = __importStar(require("react"));
+const react_redux_1 = require("react-redux");
+const redux_1 = require("redux");
 const S = __importStar(require("../searchListCss"));
 // searchList의 오른쪽 부분
-const RightSide = () => {
-    const [useTrustBest, setUseTrustBest] = (0, react_1.useState)([]);
+const rightSide = ({ getTrustBest, useTrustBest, }) => {
     (0, react_1.useEffect)(() => {
         getTrustBest();
     }, []);
-    const getTrustBest = () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const response = yield fetch(`http://localhost:4500/trustBest`);
-            // 에러처리
-            if (!response.ok) {
-                const errorData = yield response.json();
-                const statusCode = response.status;
-                const statusText = response.statusText;
-                const message = errorData.message[0];
-                console.log(`${statusCode} - ${statusText} - ${message}`);
-                return;
-            }
-            const data = yield response.json();
-            setUseTrustBest(data);
-        }
-        catch (err) {
-            console.log("error log: ", err);
-        }
-    });
     return (react_1.default.createElement(S.RightSide_div, null,
         react_1.default.createElement(S.Map_div, null, "\uC9C0\uB3C4 \uACF5\uAC04"),
         react_1.default.createElement(S.SearchListTitle_title, null, " \uAD00\uB828 \uCF58\uD150\uCE20 "),
@@ -72,5 +46,14 @@ const RightSide = () => {
                         trust.content,
                         "\"")))))));
 };
+const mapStateToProps = (state) => ({
+    useTrustBest: state.trustBest.useTrustBest,
+});
+// mapDispatchToProps 함수 정의
+const mapDispatchToProps = (dispatch) => (0, redux_1.bindActionCreators)({
+    getTrustBest: actions_1.getTrustBest,
+}, dispatch);
+// connect를 사용하여 컴포넌트와 Redux 연결
+const RightSide = (0, react_redux_1.connect)(mapStateToProps, mapDispatchToProps)(rightSide);
 exports.default = RightSide;
 //# sourceMappingURL=rightSide.js.map

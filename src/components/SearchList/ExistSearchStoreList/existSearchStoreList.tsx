@@ -48,7 +48,7 @@ const existSearchStoreList = ({
 
 
   // pageNumCheck
-  const pagenumCheck = () => {
+  const pagenumCheck = ():number => {
     // 주소값에서 가져옴 페이지 처음들어왔을땐 null
     const pageNumParams = searchParams.get("pagenum");
     return pageNumParams == null ? 1 : parseInt(pageNumParams);

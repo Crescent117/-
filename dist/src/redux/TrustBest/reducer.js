@@ -25,24 +25,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const types = __importStar(require("./types"));
 const initialState = {
-    useSearchList: [],
-    useTotalPage: 0,
-    usePageNum: 0,
-    useSearchNotFound: false,
-    useSearchNotFoundMessage: "",
+    useTrustBest: [],
 };
 const searchListReducer = (state = initialState, action) => {
     switch (action.type) {
-        case types.SET_SEARCH_LIST:
-            return Object.assign(Object.assign({}, state), { useSearchList: action.payload });
-        case types.SET_TOTAL_PAGE:
-            return Object.assign(Object.assign({}, state), { useTotalPage: action.payload });
-        case types.SET_PAGE_NUM:
-            return Object.assign(Object.assign({}, state), { usePageNum: action.payload });
-        case types.SET_SEARCH_NOT_FOUND:
-            return Object.assign(Object.assign({}, state), { useSearchNotFound: action.payload });
-        case types.SET_SEARCH_NOT_FOUND_MESSAGE:
-            return Object.assign(Object.assign({}, state), { useSearchNotFoundMessage: action.payload });
+        case types.SET_TRUSTBEST:
+            return Object.assign(Object.assign({}, state), { useTrustBest: action.payload });
         default:
             return state;
     }

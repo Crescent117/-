@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getTrustBest = void 0;
 const trustBest = require("../../Model/TrustBest/trustBest");
-exports.getTrustBest = (req, res) => {
+const getTrustBest = (req, res) => {
     trustBest
         .find({}, { _id: 0, trustBest: 1 })
         .then((data) => {
@@ -16,4 +17,5 @@ exports.getTrustBest = (req, res) => {
         res.status(500).json({ message: "server error" });
     });
 };
+exports.getTrustBest = getTrustBest;
 //# sourceMappingURL=trustBestController.js.map

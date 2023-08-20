@@ -47,6 +47,7 @@ const Banner = () => {
             }
         }
     };
+    // 나중에 작업할꺼
     const popupSearch = () => {
     };
     return (react_1.default.createElement(S.HomeBanner, null,

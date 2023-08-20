@@ -5,7 +5,6 @@ const Banner = () => {
   const [searchValue, setSearchValue] = useState("");
 
   const searchListGo = () => { 
-    
     if (searchValue.length !== 0) { 
       console.log(searchValue);
       window.location.href=`/search/${searchValue}`
@@ -26,10 +25,11 @@ const Banner = () => {
       }
     }
   };
-
+  // 나중에 작업할꺼
   const popupSearch = () => { 
     
   }
+
   return (
     <S.HomeBanner>
       <S.HomeBannerText>

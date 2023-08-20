@@ -49,7 +49,7 @@ const processStoreInfo = (param: SearchListItem) => {
 
 
 
-exports.getSearchList = async (req: Request, res: Response) => {
+export const getSearchList = async (req: Request, res: Response) => {
   const keyword: string = req.params.keyword;
   const pageNum: number = Number(req.query.pageNum) - 1 || 0;
   const pageSize = 20; // 페이지당 아이템 수
