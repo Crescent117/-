@@ -26,11 +26,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const types = __importStar(require("./types"));
 const initialState = {
     useTrustBest: [],
+    usePopularSlide: 0,
 };
 const searchListReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.SET_TRUSTBEST:
             return Object.assign(Object.assign({}, state), { useTrustBest: action.payload });
+        case types.SET_SLIDE:
+            return Object.assign(Object.assign({}, state), { usePopularSlide: action.payload });
         default:
             return state;
     }

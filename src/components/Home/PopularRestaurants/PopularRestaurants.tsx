@@ -1,48 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { WindowSizeChangeProps } from "../shared_interface";
+import {
+  getTrustBest,
+  setUsePopularSlide,
+} from "../../../redux/TrustBest/actions";
+import { connect } from "react-redux";
+import { Dispatch, bindActionCreators } from "redux";
+import { RootState } from "../../../redux/store";
 import * as S from "../shared_componentCSS";
 
-interface TrustBestDB {
-  url: string;
-  src: string;
-  alt: string;
-  titleText: string;
-  content: string;
-}
-
-const PopularRestaurants = ({
+const popularRestaurants = ({
   itemsPerPage,
   columns,
-}: WindowSizeChangeProps) => {
-  const [usePopularSlide, setUsePopularSlide] = useState(0);
-  const [useTrustBestData, setUseTrustBestData] = useState<TrustBestDB[]>([]);
-  const numberOfGroups = useTrustBestData
-    ? Math.ceil(useTrustBestData.length / itemsPerPage)
+  getTrustBest,
+  useTrustBest,
+  usePopularSlide,
+  setUsePopularSlide,
+}: WindowSizeChangeProps &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>) => {
+  const numberOfGroups = useTrustBest
+    ? Math.ceil(useTrustBest.length / itemsPerPage)
     : 0;
 
   useEffect(() => {
     getTrustBest();
   }, []);
-
-  //MogoDB 통신
-  const getTrustBest = async () => {
-    try {
-      const response = await fetch("http://localhost:4500/trustBest");
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        const statusCode = response.status;
-        const statusText = response.statusText;
-        const message = errorData.message[0];
-        console.log(`${statusCode} - ${statusText} - ${message}`);
-        return;
-      }
-      const data = await response.json();
-      setUseTrustBestData(data);
-    } catch (err) {
-      console.log("error log: ", err);
-    }
-  };
 
   const clickSlideRight = () => {
     setUsePopularSlide(usePopularSlide + 1);
@@ -57,7 +40,7 @@ const PopularRestaurants = ({
   };
   return (
     <>
-      {useTrustBestData && (
+      {useTrustBest && (
         <section>
           <S.Module_title_wrap>
             <S.Module_title_name>믿고 보는 맛집 리스트</S.Module_title_name>
@@ -70,7 +53,7 @@ const PopularRestaurants = ({
 
             <S.ImageWrapper columns={columns} rows={2} height={492}>
               <>
-                {useTrustBestData
+                {useTrustBest
                   .slice(
                     (usePopularSlide % numberOfGroups) * itemsPerPage,
                     (usePopularSlide % numberOfGroups) * itemsPerPage +
@@ -109,6 +92,25 @@ const PopularRestaurants = ({
   );
 };
 
+const mapStateToProps = (state: RootState) => ({
+  useTrustBest: state.trustBest.useTrustBest,
+  usePopularSlide: state.trustBest.usePopularSlide,
+});
 
+// mapDispatchToProps 함수 정의
+const mapDispatchToProps = (dispatch: Dispatch) =>
+  bindActionCreators(
+    {
+      getTrustBest,
+      setUsePopularSlide,
+    },
+    dispatch
+  );
+
+// connect를 사용하여 컴포넌트와 Redux 연결
+const PopularRestaurants = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(popularRestaurants);
 
 export default PopularRestaurants;

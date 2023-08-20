@@ -32,13 +32,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTrustBest = exports.setTrustBest = void 0;
+exports.getTrustBest = exports.setUsePopularSlide = exports.setTrustBest = void 0;
 const types = __importStar(require("./types"));
 const setTrustBest = (list) => ({
     type: types.SET_TRUSTBEST,
     payload: list,
 });
 exports.setTrustBest = setTrustBest;
+const setUsePopularSlide = (slide) => ({
+    type: types.SET_SLIDE,
+    payload: slide,
+});
+exports.setUsePopularSlide = setUsePopularSlide;
 const getTrustBest = () => (dispatch) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield fetch(`http://localhost:4500/trustBest`);

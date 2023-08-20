@@ -3,22 +3,36 @@ import { ThunkAction } from "redux-thunk";
 import { RootState } from "../store";
 import * as types from "./types";
 
-export interface TrustBest {
+interface TrustBest {
+  url: string;
   src: string;
+  alt: string;
   titleText: string;
   content: string;
 }
+
+
 
 interface SetTrustBestAction extends Action<typeof types.SET_TRUSTBEST> {
   payload: TrustBest[];
 }
 
+interface SetSlideAction extends Action<typeof types.SET_SLIDE> { 
+  payload: number;
+}
+
 export type TrustBestActionTypes =
-    | SetTrustBestAction;
+  | SetTrustBestAction
+  | SetSlideAction;
 
 export const setTrustBest = (list: TrustBest[]): TrustBestActionTypes => ({
   type: types.SET_TRUSTBEST,
   payload: list,
+});
+
+export const setUsePopularSlide = (slide:number): TrustBestActionTypes => ({
+  type: types.SET_SLIDE,
+  payload: slide,
 });
 
 

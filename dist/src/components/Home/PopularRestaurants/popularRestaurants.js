@@ -22,46 +22,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importStar(require("react"));
+const actions_1 = require("../../../redux/TrustBest/actions");
+const react_redux_1 = require("react-redux");
+const redux_1 = require("redux");
 const S = __importStar(require("../shared_componentCSS"));
-const PopularRestaurants = ({ itemsPerPage, columns, }) => {
-    const [usePopularSlide, setUsePopularSlide] = (0, react_1.useState)(0);
-    const [useTrustBestData, setUseTrustBestData] = (0, react_1.useState)([]);
-    const numberOfGroups = useTrustBestData
-        ? Math.ceil(useTrustBestData.length / itemsPerPage)
+const popularRestaurants = ({ itemsPerPage, columns, getTrustBest, useTrustBest, usePopularSlide, setUsePopularSlide, }) => {
+    const numberOfGroups = useTrustBest
+        ? Math.ceil(useTrustBest.length / itemsPerPage)
         : 0;
     (0, react_1.useEffect)(() => {
         getTrustBest();
     }, []);
-    //MogoDB 통신
-    const getTrustBest = () => __awaiter(void 0, void 0, void 0, function* () {
-        try {
-            const response = yield fetch("http://localhost:4500/trustBest");
-            if (!response.ok) {
-                const errorData = yield response.json();
-                const statusCode = response.status;
-                const statusText = response.statusText;
-                const message = errorData.message[0];
-                console.log(`${statusCode} - ${statusText} - ${message}`);
-                return;
-            }
-            const data = yield response.json();
-            setUseTrustBestData(data);
-        }
-        catch (err) {
-            console.log("error log: ", err);
-        }
-    });
     const clickSlideRight = () => {
         setUsePopularSlide(usePopularSlide + 1);
     };
@@ -71,14 +44,14 @@ const PopularRestaurants = ({ itemsPerPage, columns, }) => {
     const moveTopList = (url) => {
         window.location.href = url;
     };
-    return (react_1.default.createElement(react_1.default.Fragment, null, useTrustBestData && (react_1.default.createElement("section", null,
+    return (react_1.default.createElement(react_1.default.Fragment, null, useTrustBest && (react_1.default.createElement("section", null,
         react_1.default.createElement(S.Module_title_wrap, null,
             react_1.default.createElement(S.Module_title_name, null, "\uBBFF\uACE0 \uBCF4\uB294 \uB9DB\uC9D1 \uB9AC\uC2A4\uD2B8"),
             react_1.default.createElement(S.Module_more, null, "\uB9AC\uC2A4\uD2B8 \uB354\uBCF4\uAE30")),
         react_1.default.createElement(S.SliderContainer, null,
             react_1.default.createElement(S.SlideButton, { onClick: clickSlideLeft, style: { marginRight: 10 } }, "<"),
             react_1.default.createElement(S.ImageWrapper, { columns: columns, rows: 2, height: 492 },
-                react_1.default.createElement(react_1.default.Fragment, null, useTrustBestData
+                react_1.default.createElement(react_1.default.Fragment, null, useTrustBest
                     .slice((usePopularSlide % numberOfGroups) * itemsPerPage, (usePopularSlide % numberOfGroups) * itemsPerPage +
                     itemsPerPage)
                     .map((image, index) => (react_1.default.createElement(S.ImageContainer, { key: index, onDragStart: (e) => e.preventDefault(), height: 236, onClick: () => moveTopList(image.url) },
@@ -90,5 +63,16 @@ const PopularRestaurants = ({ itemsPerPage, columns, }) => {
                         "\"")))))),
             react_1.default.createElement(S.SlideButton, { onClick: clickSlideRight, style: { marginLeft: 10 } }, ">"))))));
 };
+const mapStateToProps = (state) => ({
+    useTrustBest: state.trustBest.useTrustBest,
+    usePopularSlide: state.trustBest.usePopularSlide,
+});
+// mapDispatchToProps 함수 정의
+const mapDispatchToProps = (dispatch) => (0, redux_1.bindActionCreators)({
+    getTrustBest: actions_1.getTrustBest,
+    setUsePopularSlide: actions_1.setUsePopularSlide,
+}, dispatch);
+// connect를 사용하여 컴포넌트와 Redux 연결
+const PopularRestaurants = (0, react_redux_1.connect)(mapStateToProps, mapDispatchToProps)(popularRestaurants);
 exports.default = PopularRestaurants;
 //# sourceMappingURL=popularRestaurants.js.map

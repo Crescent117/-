@@ -28,7 +28,6 @@ if (process.env.MONGO_URI !== undefined) {
 }
 
 // 믿고 보는 맛집 리스트
-
 app.use(trustBestRoute);
 
 // 검색리스트
